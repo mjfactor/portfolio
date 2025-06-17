@@ -19,7 +19,10 @@ export function ChatBox() {
         role: "assistant",
         content: "Hi! I'm excited to learn about your project. How can I help you today?"
       }
-    ]
+    ],
+    onError: (error) => {
+      console.error("Chat error:", error)
+    }
   })
 
   const onSubmit = (e: React.FormEvent) => {
