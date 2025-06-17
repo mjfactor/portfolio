@@ -5,39 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github } from "lucide-react"
-
-const projects = [
-  {
-    id: 1,
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce solution built with Next.js, featuring user authentication, payment processing, and admin dashboard.",
-    technologies: ["Next.js", "TypeScript", "Stripe", "Prisma"],
-    image: "/placeholder.svg?height=200&width=300",
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-  {
-    id: 2,
-    title: "Task Management App",
-    description:
-      "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.",
-    technologies: ["React", "Node.js", "Socket.io", "MongoDB"],
-    image: "/placeholder.svg?height=200&width=300",
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-  {
-    id: 3,
-    title: "Weather Dashboard",
-    description:
-      "A responsive weather dashboard that provides detailed forecasts, interactive maps, and location-based weather alerts.",
-    technologies: ["Vue.js", "Chart.js", "OpenWeather API", "Tailwind"],
-    image: "/placeholder.svg?height=200&width=300",
-    liveUrl: "#",
-    githubUrl: "#",
-  },
-]
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import projects from "../../projects.json"
 
 export function ProjectsSection() {
   return (
@@ -56,58 +31,77 @@ export function ProjectsSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -5 }}
-              className="h-full"
-            >
-              <Card className="h-full flex flex-col overflow-hidden group hover:shadow-lg transition-all duration-300">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    <Button size="sm" variant="secondary" asChild>
-                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Live Demo
-                      </a>
-                    </Button>
-                    <Button size="sm" variant="secondary" asChild>
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-4 w-4 mr-2" />
-                        Code
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-
-                <CardHeader>
-                  <CardTitle className="text-xl">{project.title}</CardTitle>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-
-                <CardContent className="flex-1 flex flex-col justify-end">
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                      <Badge key={tech} variant="secondary">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="mt-8"
+        >
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {projects.map((project, index) => (
+                <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="h-full"
+                  >
+                    <Card className="h-full flex flex-col">
+                      <CardHeader className="pb-2">
+                        <div className="h-[180px] w-full overflow-hidden rounded-t-lg">
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                          />
+                        </div>
+                        <CardTitle className="text-xl mt-4">{project.title}</CardTitle>
+                        <CardDescription className="text-sm line-clamp-3">
+                          {project.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="flex flex-col flex-grow">
+                        <div className="mb-4 flex flex-wrap gap-2">
+                          {project.technologies.map((tech, techIndex) => (
+                            <Badge key={techIndex} variant="secondary">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="flex gap-2 mt-auto">
+                          <Button asChild variant="default" size="sm">
+                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="mr-2 h-4 w-4" />
+                              Live Demo
+                            </a>
+                          </Button>
+                          <Button asChild variant="outline" size="sm">
+                            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                              <Github className="mr-2 h-4 w-4" />
+                              Code
+                            </a>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex items-center justify-center mt-8 gap-2">
+              <CarouselPrevious className="static translate-y-0 left-auto" />
+              <CarouselNext className="static translate-y-0 right-auto" />
+            </div>
+          </Carousel>
+        </motion.div>
       </div>
     </section>
   )

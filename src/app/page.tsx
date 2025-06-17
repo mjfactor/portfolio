@@ -5,20 +5,17 @@ import { Navigation } from "@/components/navigation"
 import { ProjectsSection } from "@/components/projects-section"
 import { HeroSection } from "@/components/hero-section"
 import { ChatBox } from "@/components/chat-box"
+import { AnimatedBackground } from "@/components/animated-background"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <AnimatedBackground />
       <Navigation />
-      <main>
+      <main className="relative z-10">
         <HeroSection />
         <ProjectsSection />
       </main>
-      <footer className="py-8 text-center text-muted-foreground">
-        <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6 }}>
-          © 2024 Portfolio. Built with Next.js & Framer Motion.
-        </motion.p>
-      </footer>
       {/* Floating Chat Widget */}
       <ChatBox />
     </div>

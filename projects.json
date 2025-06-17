@@ -1,0 +1,54 @@
+[
+    {
+        "title": "E-Commerce Platform",
+        "description": "A full-stack e-commerce solution built with Next.js, featuring user authentication, payment processing, and admin dashboard.",
+        "technologies": [
+            "Next.js",
+            "TypeScript",
+            "Stripe",
+            "Prisma"
+        ],
+        "image": "/placeholder.svg?height=200&width=300",
+        "liveUrl": "#",
+        "githubUrl": "#"
+    },
+    {
+        "title": "AI Content Generator",
+        "description": "A web application that leverages OpenAI's APIs to generate high-quality content for blogs, social media, and marketing materials.",
+        "technologies": [
+            "React",
+            "Node.js",
+            "OpenAI API",
+            "Tailwind CSS"
+        ],
+        "image": "/window.svg?height=200&width=300",
+        "liveUrl": "#",
+        "githubUrl": "#"
+    },
+    {
+        "title": "Real-time Chat App",
+        "description": "A modern chat application with real-time messaging capabilities, user presence indicators, and end-to-end encryption.",
+        "technologies": [
+            "Next.js",
+            "Socket.io",
+            "Firebase",
+            "Shadcn UI"
+        ],
+        "image": "/globe.svg?height=200&width=300",
+        "liveUrl": "#",
+        "githubUrl": "#"
+    },
+    {
+        "title": "Personal Finance Dashboard",
+        "description": "A comprehensive financial tracking application with expense categorization, budget planning, and visualization tools.",
+        "technologies": [
+            "Vue.js",
+            "Chart.js",
+            "Express",
+            "MongoDB"
+        ],
+        "image": "/file.svg?height=200&width=300",
+        "liveUrl": "#",
+        "githubUrl": "#"
+    }
+]
