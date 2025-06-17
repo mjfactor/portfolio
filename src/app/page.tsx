@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Navigation } from "@/components/navigation"
 import { ProjectsSection } from "@/components/projects-section"
 import { HeroSection } from "@/components/hero-section"
+import { ChatBox } from "@/components/chat-box"
 
 export default function Home() {
   return (
@@ -18,6 +19,8 @@ export default function Home() {
           © 2024 Portfolio. Built with Next.js & Framer Motion.
         </motion.p>
       </footer>
+      {/* Floating Chat Widget */}
+      <ChatBox />
     </div>
   )
 }

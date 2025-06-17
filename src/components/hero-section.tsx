@@ -1,7 +1,6 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ChatBox } from "@/components/chat-box"
 
 export function HeroSection() {
   return (
@@ -28,7 +27,7 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex justify-center"
         >
-          <ChatBox />
+          {/* Chat is now floating globally */}
         </motion.div>
       </div>
     </section>
