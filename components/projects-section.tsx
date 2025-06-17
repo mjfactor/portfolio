@@ -12,7 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import projects from "../../projects.json"
+import projects from "../projects.json"
 
 export function ProjectsSection() {
   return (
