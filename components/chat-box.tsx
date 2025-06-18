@@ -17,7 +17,7 @@ export function ChatBox() {
       {
         id: "1",
         role: "assistant",
-        content: "Hi! I'm excited to learn about your project. How can I help you today?"
+        content: "Hi! What do want to know about Emjay?"
       }
     ],
     onError: (error) => {
@@ -48,7 +48,7 @@ export function ChatBox() {
       {
         id: "1",
         role: "assistant",
-        content: "Hi! I'm excited to learn about your project. How can I help you today?"
+        content: "Hi! What do want to know about Emjay?"
       }
     ])
   }

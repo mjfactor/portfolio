@@ -1,54 +1,61 @@
 [
     {
-        "title": "E-Commerce Platform",
-        "description": "A full-stack e-commerce solution built with Next.js, featuring user authentication, payment processing, and admin dashboard.",
+        "title": "What is your next AI Slop Project?",
+        "description": "You got an idea? Use this!",
         "technologies": [
             "Next.js",
             "TypeScript",
-            "Stripe",
-            "Prisma"
+            "Vercel AI SDK",
+            "Neon Postgres",
+            "Better-Auth"
         ],
-        "image": "/placeholder.svg?height=200&width=300",
-        "liveUrl": "#",
-        "githubUrl": "#"
+        "image": "/images/what-is-your-next-ai-slop-project.png",
+        "liveUrl": "https://what-is-your-next-ai-slop-project.vercel.app/",
+        "githubUrl": "https://github.com/mjfactor/what-is-your-next-ai-slop-project"
     },
     {
-        "title": "AI Content Generator",
-        "description": "A web application that leverages OpenAI's APIs to generate high-quality content for blogs, social media, and marketing materials.",
-        "technologies": [
-            "React",
-            "Node.js",
-            "OpenAI API",
-            "Tailwind CSS"
-        ],
-        "image": "/window.svg?height=200&width=300",
-        "liveUrl": "#",
-        "githubUrl": "#"
-    },
-    {
-        "title": "Real-time Chat App",
-        "description": "A modern chat application with real-time messaging capabilities, user presence indicators, and end-to-end encryption.",
+        "title": "InterviewPrep AI",
+        "description": "AI interview preparation platform with generated questions and voice practice.",
         "technologies": [
             "Next.js",
-            "Socket.io",
+            "React",
+            "TypeScript",
             "Firebase",
-            "Shadcn UI"
+            "Vercel AI SDK",
+            "Vapi AI"
         ],
-        "image": "/globe.svg?height=200&width=300",
-        "liveUrl": "#",
-        "githubUrl": "#"
+        "image": "/images/prep-interview.png",
+        "liveUrl": "https://prep-interview-vapi.vercel.app/",
+        "githubUrl": "https://github.com/mjfactor/interview-prep"
     },
     {
-        "title": "Personal Finance Dashboard",
-        "description": "A comprehensive financial tracking application with expense categorization, budget planning, and visualization tools.",
+        "title": "Career Insights",
+        "description": "AI career guidance platform with resume analysis and job recommendations.",
         "technologies": [
-            "Vue.js",
-            "Chart.js",
-            "Express",
-            "MongoDB"
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Prisma",
+            "NextAuth.js",
+            "AI SDK"
         ],
-        "image": "/file.svg?height=200&width=300",
-        "liveUrl": "#",
-        "githubUrl": "#"
+        "image": "/images/employment-opportunities.png",
+        "liveUrl": "https://www.employmentopportunities.systems/",
+        "githubUrl": "https://github.com/mjfactor/career-insights"
+    },
+    {
+        "title": "Portfolio",
+        "description": "My Portfolio to showcase my projects and skills, built with RAG about me and my work.",
+        "technologies": [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Prisma",
+            "NextAuth.js",
+            "AI SDK"
+        ],
+        "image": "/images/portfolio.png",
+        "liveUrl": "https://www.portfolio-ai.vercel.app/",
+        "githubUrl": "https://github.com/mjfactor/portfolio"
     }
 ]
