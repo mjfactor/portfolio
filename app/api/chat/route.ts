@@ -1,8 +1,8 @@
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+export const maxDuration = 60;
+export const runtime = 'edge';
 
 interface ChatRequestBody {
     messages: any[];
