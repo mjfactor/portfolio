@@ -45,7 +45,7 @@
     },
     {
         "title": "Portfolio",
-        "description": "My Portfolio to showcase my projects and skills, built with RAG about me and my work.",
+        "description": "My Portfolio to showcase my projects and skills.",
         "technologies": [
             "Next.js",
             "React",

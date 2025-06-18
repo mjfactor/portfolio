@@ -12,8 +12,8 @@ export async function POST(req: Request) {
     const { messages } = await req.json() as ChatRequestBody;
 
     const result = streamText({
-        model: google('gemini-1.5-flash'),
-        system: 'You are a helpful assistant.',
+        model: google('gemini-2.5-flash'),
+        system: "Don't Answer question yet about emjay, say that the developer emjay is currently working on RAG for this portfolio, so you can't answer questions yet about emjay.",
         messages,
     });
 
