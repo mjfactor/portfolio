@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "Emjay's Portfolio",
     images: [
       {
-        url: '/opengraph-image.png',
+        url: 'https://portfolio-emjay-factor.vercel.app/opengraph-image.png', // Ensure this path is correct
         width: 1200,
         height: 630,
         alt: "Emjay's Portfolio - AI Applications • Software Applications • Deployment",
