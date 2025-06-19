@@ -8,7 +8,24 @@ export const metadata: Metadata = {
   title: "Emjay's Portfolio",
   description: "A modern portfolio website showcasing creative projects and development skills.",
   keywords: ["portfolio", "developer", "web development", "projects"],
-  authors: [{ name: "Portfolio Developer" }],
+  authors: [{ name: "Emjay" }],
+  metadataBase: new URL('https://portfolio-emjay-factor.vercel.app/'), // Replace with your actual domain
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://portfolio-emjay-factor.vercel.app/', // Replace with your actual domain
+    title: "Emjay's Portfolio",
+    description: "A modern portfolio website showcasing creative projects and development skills with AI-powered chat assistant.",
+    siteName: "Emjay's Portfolio",
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        alt: "Emjay's Portfolio - AI Applications • Software Applications • Deployment",
+      },
+    ],
+  }
 }
 
 const geistSans = Geist({
