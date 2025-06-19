@@ -27,14 +27,14 @@ export function ChatBox() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || status !== 'ready') return
+    if (!input.trim() || status === 'submitted' || status === 'streaming') return
     handleSubmit(e)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      if (input.trim() && status === 'ready') {
+      if (input.trim() && status !== 'submitted' && status !== 'streaming') {
         const form = e.currentTarget.closest('form')
         if (form) {
           handleSubmit(e as any)
@@ -168,12 +168,12 @@ export function ChatBox() {
                       onKeyDown={handleKeyPress}
                       placeholder="Type your message..."
                       className="flex-1"
-                      disabled={status !== 'ready'}
+                      disabled={status === 'submitted' || status === 'streaming'}
                     />
                     <Button
                       type="submit"
                       size="icon"
-                      disabled={status !== 'ready' || !input.trim()}
+                      disabled={status === 'submitted' || status === 'streaming' || !input.trim()}
                     >
                       <Send className="h-4 w-4" />
                     </Button>
