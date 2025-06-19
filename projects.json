@@ -51,7 +51,6 @@
             "React",
             "TypeScript",
             "Prisma",
-            "NextAuth.js",
             "AI SDK"
         ],
         "image": "/images/portfolio.png",
