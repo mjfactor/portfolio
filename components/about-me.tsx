@@ -32,7 +32,6 @@ export function AboutMe() {
     "Google AI Studio": Brain,
     "Node.js": Server,
     "Python": Code2,
-    "OpenAI API": Brain,
     "LangChain/LangGraph": Link,
     "PostgreSQL": Database,
     "Docker": Container,
@@ -49,14 +48,9 @@ export function AboutMe() {
     },
     {
       title: "Full-Stack Development",
-      description: "End-to-end web applications using modern frameworks and best practices",
+      description: "End-to-end web applications using modern frameworks ",
       icon: "💻"
     },
-    {
-      title: "Cloud Deployment",
-      description: "Scalable deployments with containerization and modern DevOps practices",
-      icon: "☁️"
-    }
   ]
 
   return (
