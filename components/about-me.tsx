@@ -48,9 +48,14 @@ export function AboutMe() {
     },
     {
       title: "Full-Stack Development",
-      description: "End-to-end web applications using modern frameworks ",
+      description: "End-to-end web applications using modern frameworks and best practices",
       icon: "💻"
     },
+    {
+      title: "Cloud Deployment",
+      description: "Deploy applications on various cloud platforms",
+      icon: "☁️"
+    }
   ]
 
   return (
