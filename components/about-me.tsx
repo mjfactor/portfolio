@@ -23,13 +23,14 @@ export function AboutMe() {
   const skills = [
     "TypeScript", "React", "Next.js", "Node.js", "Python",
     "OpenAI API", "LangChain/LanGraph", "TailwindCSS", "PostgreSQL",
-    "Docker", "Azure", "Vercel", "Google AI Studio"
+    "Docker", "Azure", "Vercel", "Google AI Studio", "Vercel AI Sdk",
   ]
 
   const skillIcons = {
     "TypeScript": Code2,
     "React": Component,
     "Next.js": Globe,
+    "Google AI Studio": Brain,
     "Node.js": Server,
     "Python": Code2,
     "OpenAI API": Brain,
@@ -40,7 +41,7 @@ export function AboutMe() {
     "Azure": Cloud,
     "Vercel": Zap,
     "GitHub Actions": GitBranch,
-    "Google AI Studio": Brain
+    "Vercel AI Sdk": Brain,
   }
 
   const focusAreas = [
