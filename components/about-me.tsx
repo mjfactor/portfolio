@@ -16,7 +16,7 @@ import {
   Cloud,
   Zap,
   GitBranch,
-  Smartphone
+
 } from "lucide-react"
 
 export function AboutMe() {
