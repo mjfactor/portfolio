@@ -21,9 +21,8 @@ import {
 
 export function AboutMe() {
   const skills = [
-    "TypeScript", "React", "Next.js", "Node.js", "Python",
-    "OpenAI API", "LangChain/LangGraph", "TailwindCSS", "PostgreSQL",
-    "Docker", "Azure", "Vercel", "Google AI Studio", "Vercel AI Sdk",
+    "TypeScript", "React", "Next.js", "Node.js", "Python", "LangChain/LangGraph", "PostgreSQL",
+    "Docker", "Vercel", "Google AI Studio", "Vercel AI Sdk",
   ]
 
   const skillIcons = {
@@ -35,10 +34,8 @@ export function AboutMe() {
     "Python": Code2,
     "OpenAI API": Brain,
     "LangChain/LangGraph": Link,
-    "TailwindCSS": Palette,
     "PostgreSQL": Database,
     "Docker": Container,
-    "Azure": Cloud,
     "Vercel": Zap,
     "GitHub Actions": GitBranch,
     "Vercel AI Sdk": Brain,
