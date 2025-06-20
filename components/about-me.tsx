@@ -22,7 +22,7 @@ import {
 export function AboutMe() {
   const skills = [
     "TypeScript", "React", "Next.js", "Node.js", "Python",
-    "OpenAI API", "LangChain/LanGraph", "TailwindCSS", "PostgreSQL",
+    "OpenAI API", "LangChain/LangGraph", "TailwindCSS", "PostgreSQL",
     "Docker", "Azure", "Vercel", "Google AI Studio", "Vercel AI Sdk",
   ]
 
@@ -34,7 +34,7 @@ export function AboutMe() {
     "Node.js": Server,
     "Python": Code2,
     "OpenAI API": Brain,
-    "LangChain/LanGraph": Link,
+    "LangChain/LangGraph": Link,
     "TailwindCSS": Palette,
     "PostgreSQL": Database,
     "Docker": Container,
