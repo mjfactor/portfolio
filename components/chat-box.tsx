@@ -13,16 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 export function ChatBox() {
   const [isOpen, setIsOpen] = useState(false)
   const { messages, input, handleInputChange, handleSubmit, status, error, setMessages } = useChat({
-    initialMessages: [
-      {
-        id: "1",
-        role: "assistant",
-        content: "Hi! What do want to know about Emjay?"
-      }
-    ],
     onError: (error) => {
       console.error("Chat error:", error)
-    }
+    },
+
   })
 
   const onSubmit = (e: React.FormEvent) => {
@@ -44,13 +38,7 @@ export function ChatBox() {
   }
 
   const clearMessages = () => {
-    setMessages([
-      {
-        id: "1",
-        role: "assistant",
-        content: "Hi! What do want to know about Emjay?"
-      }
-    ])
+    setMessages([])
   }
 
   return (
