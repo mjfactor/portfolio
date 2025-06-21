@@ -4,11 +4,12 @@ import type React from "react"
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, MessageCircle, X, Trash2 } from "lucide-react"
+import { Send, MessageCircle, X, Trash2, Play, Mic, MicOff } from "lucide-react"
 import { useChat } from "@ai-sdk/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useVapi } from "@/hooks/use-vapi"
 
 export function ChatBox() {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,6 +25,29 @@ export function ChatBox() {
       console.error("Chat error:", error)
     }
   })
+  const { isSpeaking, speak, connectionState, startCall, stopCall, isConnected } = useVapi()
+
+  const handleSpeak = (message: string) => {
+    if (isConnected) {
+      speak(message)
+    }
+  }
+
+  const handleVoiceToggle = () => {
+    if (connectionState === "connected") {
+      stopCall()
+    } else if (connectionState === "idle" || connectionState === "error") {
+      startCall()
+    }
+  }
+
+  // Cleanup call when chat is closed
+  const handleClose = () => {
+    if (connectionState === "connected") {
+      stopCall()
+    }
+    setIsOpen(false)
+  }
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,23 +123,51 @@ export function ChatBox() {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md mx-auto"
             >
-              <Card className="h-[500px] md:h-[600px] flex flex-col">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                  <CardTitle className="text-lg">Let's Chat!</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={clearMessages}
-                      title="Clear messages"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
+              <Card className="h-[500px] md:h-[600px] flex flex-col">                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                <CardTitle className="text-lg">Let's Chat!</CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={connectionState === "connected" ? "default" : "outline"}
+                    size="sm"
+                    onClick={handleVoiceToggle}
+                    disabled={connectionState === "connecting"}
+                    title={
+                      connectionState === "connected"
+                        ? "Stop voice session"
+                        : connectionState === "connecting"
+                          ? "Connecting..."
+                          : "Start voice session"
+                    }
+                  >
+                    {connectionState === "connecting" ? (
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-b-transparent" />
+                    ) : connectionState === "connected" ? (
+                      <MicOff className="h-4 w-4" />
+                    ) : (
+                      <Mic className="h-4 w-4" />
+                    )}
+                    <span className="ml-1 text-xs">
+                      {connectionState === "connected"
+                        ? "Voice On"
+                        : connectionState === "connecting"
+                          ? "Connecting"
+                          : "Voice Off"
+                      }
+                    </span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={clearMessages}
+                    title="Clear messages"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={handleClose}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
 
                 <CardContent className="flex-1 flex flex-col overflow-hidden">
                   {/* Messages */}
@@ -127,14 +179,30 @@ export function ChatBox() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
-                          className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                          className={`flex items-center gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                         >
                           <div
                             className={`max-w-[80%] p-3 rounded-lg ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
                               }`}
                           >
                             <p className="text-sm">{message.content}</p>
-                          </div>
+                          </div>                          {message.role === "assistant" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleSpeak(message.content)}
+                              disabled={!isConnected || isSpeaking}
+                              title={
+                                !isConnected
+                                  ? "Start voice session first"
+                                  : isSpeaking
+                                    ? "Speaking..."
+                                    : "Play message"
+                              }
+                            >
+                              <Play className={`h-4 w-4 ${isSpeaking ? "animate-pulse" : ""} ${!isConnected ? "opacity-50" : ""}`} />
+                            </Button>
+                          )}
                         </motion.div>
                       ))}
                     </AnimatePresence>
