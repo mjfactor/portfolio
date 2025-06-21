@@ -1,6 +1,8 @@
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
-import { LangChainAdapter } from 'ai';
+
+import { streamText, tool } from 'ai';
+import { google } from '@ai-sdk/google';
+import { z } from 'zod';
+import { retrieveContext } from '@/lib/rag/retriever';
 
 export const maxDuration = 30;
 export const runtime = 'edge';
@@ -11,27 +13,25 @@ interface ChatRequestBody {
 
 export async function POST(req: Request) {
     const { messages } = await req.json() as ChatRequestBody;
+    const model = google('gemini-2.0-flash')
 
-    // Create a prompt template with system message
-    const prompt = ChatPromptTemplate.fromMessages([
-        [
-            "system",
-            `
-            You are a chatbot Created by emjay, a developer who is currently working on a portfolio website. .
-            Don't Answer question yet about emjay, say that the developer emjay is currently working on RAG for this portfolio, so you can't answer questions yet about emjay. Do not provide any information about emjay or their work on RAG.
-            `
-        ],
-        new MessagesPlaceholder("messages")
-    ]);
-
-    const model = new ChatGoogleGenerativeAI({
-        model: 'gemini-2.0-flash',
+    const result = streamText({
+        model: model,
+        system: `
+        You are a helpful AI assistant for emjay's portfolio website. You have access to information about emjay's background, skills, projects, and experience.
+        If asked about topics not covered in the portfolio information, politely explain that you can only provide information about what's documented in emjay's portfolio.
+        `,
+        messages,
+        tools: {
+            getInformation: tool({
+                description: `get information from your knowledge base to answer questions.`,
+                parameters: z.object({
+                    question: z.string().describe('the users question'),
+                }),
+                execute: async ({ question }) => retrieveContext(question),
+            }),
+        },
     });
 
-    // Format messages with the prompt template
-    const formattedMessages = await prompt.formatMessages({ messages });
-
-    const stream = await model.stream(formattedMessages);
-
-    return LangChainAdapter.toDataStreamResponse(stream);
+    return result.toDataStreamResponse();
 }

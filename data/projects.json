@@ -1,0 +1,60 @@
+[
+    {
+        "title": "What is your next AI Slop Project?",
+        "description": "AI that can help you brainstorm your next AI project idea by providing suggestions and resources.",
+        "technologies": [
+            "Next.js",
+            "TypeScript",
+            "Vercel AI SDK",
+            "Neon Postgres",
+            "Better-Auth"
+        ],
+        "image": "/images/what-is-your-next-ai-slop-project.png",
+        "liveUrl": "https://what-is-your-next-ai-slop-project.vercel.app/",
+        "githubUrl": "https://github.com/mjfactor/what-is-your-next-ai-slop-project"
+    },
+    {
+        "title": "InterviewPrep AI",
+        "description": "AI interview preparation platform with generated questions and voice practice.",
+        "technologies": [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Firebase",
+            "Vercel AI SDK",
+            "Vapi AI"
+        ],
+        "image": "/images/prep-interview.png",
+        "liveUrl": "https://prep-interview-vapi.vercel.app/",
+        "githubUrl": "https://github.com/mjfactor/interview-prep"
+    },
+    {
+        "title": "Career Insights",
+        "description": "AI career guidance platform with resume analysis and job recommendations.",
+        "technologies": [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Prisma",
+            "NextAuth.js",
+            "AI SDK"
+        ],
+        "image": "/images/employment-opportunities.png",
+        "liveUrl": "https://www.employmentopportunities.systems/",
+        "githubUrl": "https://github.com/mjfactor/career-insights"
+    },
+    {
+        "title": "Portfolio",
+        "description": "My Portfolio to showcase my projects and skills.",
+        "technologies": [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Prisma",
+            "AI SDK"
+        ],
+        "image": "/images/portfolio.png",
+        "liveUrl": "https://www.portfolio-ai.vercel.app/",
+        "githubUrl": "https://github.com/mjfactor/portfolio"
+    }
+]
