@@ -7,6 +7,7 @@ import {
     AzureAISearchVectorStore,
     AzureAISearchQueryType,
 } from "@langchain/community/vectorstores/azure_aisearch";
+import { SearchIndexClient, AzureKeyCredential } from "@azure/search-documents";
 import type { Document } from "@langchain/core/documents";
 
 // Load environment variables
@@ -91,17 +92,9 @@ async function loadWebsiteContent(): Promise<Document[]> {
     return allWebDocs;
 }
 
-async function setupRAG() {
+export async function createIndex() {
     console.log("🚀 Starting RAG setup...");
 
-    // Validate environment variables
-    if (!process.env.AZURE_AISEARCH_ENDPOINT) {
-        throw new Error("❌ AZURE_AISEARCH_ENDPOINT not found in environment variables");
-    }
-    if (!process.env.AZURE_AISEARCH_KEY) {
-        throw new Error("❌ AZURE_AISEARCH_KEY not found in environment variables");
-    } console.log("✅ Environment variables loaded successfully");
-    console.log(`🔗 Azure endpoint: ${process.env.AZURE_AISEARCH_ENDPOINT}`);
     console.log("📄 Loading documents...");
 
     // Load website content
@@ -130,7 +123,36 @@ async function setupRAG() {
             },
             indexName: "emjay-portfolio",
         }
-    ); console.log("✅ RAG setup complete! Your website documents are indexed.");
+    );
+
+    console.log("✅ RAG setup complete! Your website documents are indexed.");
 }
 
-setupRAG().catch(console.error);
+export async function recreateIndex(indexName: string = "emjay-portfolio"): Promise<void> {
+    try {
+        // Delete existing index
+        if (!process.env.AZURE_AISEARCH_ENDPOINT || !process.env.AZURE_AISEARCH_KEY) {
+            throw new Error("Azure AI Search credentials not found");
+        }
+
+        const indexClient = new SearchIndexClient(
+            process.env.AZURE_AISEARCH_ENDPOINT,
+            new AzureKeyCredential(process.env.AZURE_AISEARCH_KEY)
+        );
+        try {
+            await indexClient.deleteIndex(indexName);
+            console.log(`✅ Successfully deleted index: ${indexName}`);
+        } catch (error: any) {
+            if (error.statusCode !== 404) {
+                console.error("Failed to check index existence:", error);
+                throw error;
+            }
+        }
+        console.log("🔄 Recreating index with fresh data...");
+        await createIndex();
+
+    } catch (error) {
+        console.error("Failed to recreate index:", error);
+        throw error;
+    }
+}

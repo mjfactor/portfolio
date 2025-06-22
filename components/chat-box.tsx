@@ -4,11 +4,13 @@ import type React from "react"
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, MessageCircle, X, Trash2 } from "lucide-react"
+import { Send, MessageCircle, X, Trash2, RotateCcw } from "lucide-react"
 import { useChat } from "@ai-sdk/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { toast } from "sonner"
+import ReactMarkdown from "react-markdown"
 
 
 // Helper function to format tool names for display
@@ -21,6 +23,10 @@ const formatToolName = (toolName: string): string => {
 
 export function ChatBox() {
   const [isOpen, setIsOpen] = useState(false)
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false)
+  const [password, setPassword] = useState("")
+  const [isReindexing, setIsReindexing] = useState(false)
+
   const { messages, input, handleInputChange, handleSubmit, status, error, setMessages } = useChat({
     onError: (error) => {
       console.error("Chat error:", error)
@@ -50,7 +56,6 @@ export function ChatBox() {
       }
     }
   }
-
   const clearMessages = () => {
     setMessages([
       {
@@ -60,6 +65,7 @@ export function ChatBox() {
       }
     ])
   }
+
 
   return (
     <>
@@ -104,13 +110,20 @@ export function ChatBox() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md mx-auto"
+              onClick={(e) => e.stopPropagation()} className="w-full max-w-2xl mx-auto"
             >
-              <Card className="h-[500px] md:h-[600px] flex flex-col">
+              <Card className="h-[70vh] md:h-[80vh] max-h-[700px] flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                  <CardTitle className="text-lg">Let's Chat!</CardTitle>
-                  <div className="flex items-center gap-2">
+                  <CardTitle className="text-lg">Let's Chat!</CardTitle>                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowPasswordDialog(true)}
+                      title="Recreate Index"
+                      disabled={isReindexing}
+                    >
+                      <RotateCcw className={`h-4 w-4 ${isReindexing ? 'animate-spin' : ''}`} />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -135,11 +148,10 @@ export function ChatBox() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
                           className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                        >                          <div
+                          className={`max-w-[85%] p-3 rounded-lg overflow-hidden ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                            }`}
                         >
-                          <div
-                            className={`max-w-[80%] p-3 rounded-lg ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                              }`}
-                          >
                             {/* Render message parts if available, otherwise fall back to content */}
                             {message.parts && message.parts.length > 0 ? (
                               <div className="space-y-2">
@@ -147,9 +159,9 @@ export function ChatBox() {
                                   switch (part.type) {
                                     case 'text':
                                       return (
-                                        <p key={partIndex} className="text-sm">
-                                          {part.text}
-                                        </p>
+                                        <div key={partIndex} className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
+                                          <ReactMarkdown>{part.text}</ReactMarkdown>
+                                        </div>
                                       );
                                     case 'tool-invocation':
                                       const { toolInvocation } = part;
@@ -187,10 +199,11 @@ export function ChatBox() {
                                       return null;
                                   }
                                 })}
-                              </div>
-                            ) : (
+                              </div>) : (
                               // Backward compatibility: show content if no parts
-                              <p className="text-sm">{message.content}</p>
+                              <div className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
+                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                              </div>
                             )}
                           </div>
                         </motion.div>
@@ -202,7 +215,7 @@ export function ChatBox() {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex justify-start"
                       >
-                        <div className="max-w-[80%] p-3 rounded-lg bg-muted">
+                        <div className="max-w-[85%] p-3 rounded-lg bg-muted overflow-hidden">
                           <div className="flex items-center space-x-2">
                             <div className="flex space-x-1">
                               <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -258,8 +271,7 @@ export function ChatBox() {
                 </CardContent>
               </Card>
             </motion.div>
-          </motion.div>
-        )}
+          </motion.div>)}
       </AnimatePresence>
     </>
   )

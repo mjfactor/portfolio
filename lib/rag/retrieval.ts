@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
 import {
@@ -5,24 +6,25 @@ import {
     AzureAISearchQueryType,
 } from "@langchain/community/vectorstores/azure_aisearch";
 
+// Load environment variables
+dotenv.config();
+
 export async function createRetriever() {
     try {
-        // Validate Azure AI Search environment variables
-        if (!process.env.AZURE_AISEARCH_ENDPOINT) {
-            throw new Error("❌ AZURE_AISEARCH_ENDPOINT not found in environment variables");
-        }
-        if (!process.env.AZURE_AISEARCH_KEY) {
-            throw new Error("❌ AZURE_AISEARCH_KEY not found in environment variables");
-        } const vectorStore = new AzureAISearchVectorStore(
+        const vectorStore = new AzureAISearchVectorStore(
             new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
                 taskType: TaskType.RETRIEVAL_QUERY,
-            }), {
-            search: {
-                type: AzureAISearchQueryType.SimilarityHybrid,
-            },
-            indexName: "emjay-portfolio",
-        }); return vectorStore.asRetriever({
+            }),
+            {
+                search: {
+                    type: AzureAISearchQueryType.SimilarityHybrid,
+                },
+                indexName: "emjay-portfolio",
+            }
+        );
+
+        return vectorStore.asRetriever({
             k: 4,
             searchType: "similarity"
         });

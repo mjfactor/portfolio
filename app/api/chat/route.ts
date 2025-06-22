@@ -2,7 +2,7 @@
 import { streamText, tool } from 'ai';
 import { google } from '@ai-sdk/google';
 import { z } from 'zod';
-import { retrieveContext } from '@/lib/rag/retriever';
+import { retrieveContext } from '@/lib/rag/retrieval';
 
 export const maxDuration = 30;
 export const runtime = 'edge';
@@ -13,7 +13,7 @@ interface ChatRequestBody {
 
 export async function POST(req: Request) {
     const { messages } = await req.json() as ChatRequestBody;
-    const model = google('gemini-2.0-flash')
+    const model = google('gemini-2.5-flash-lite-preview-06-17')
 
     const result = streamText({
         model: model,
