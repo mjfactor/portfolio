@@ -4,50 +4,37 @@ import type React from "react"
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, MessageCircle, X, Trash2, Play, Mic, MicOff } from "lucide-react"
+import { Send, MessageCircle, X, Trash2, RotateCcw } from "lucide-react"
 import { useChat } from "@ai-sdk/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useVapi } from "@/hooks/use-vapi"
+import ReactMarkdown from "react-markdown"
+
+
+// Helper function to format tool names for display
+const formatToolName = (toolName: string): string => {
+  return toolName
+    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+    .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+    .trim();
+};
 
 export function ChatBox() {
   const [isOpen, setIsOpen] = useState(false)
+
+
   const { messages, input, handleInputChange, handleSubmit, status, error, setMessages } = useChat({
-    initialMessages: [
-      {
-        id: "1",
-        role: "assistant",
-        content: "Hi! What do want to know about Emjay?"
-      }
-    ],
     onError: (error) => {
       console.error("Chat error:", error)
-    }
+    },
+    maxSteps: 3,
+    initialMessages: [{
+      id: "1",
+      role: "system",
+      content: "What do you wanna know about emjay?"
+    }]
   })
-  const { isSpeaking, speak, connectionState, startCall, stopCall, isConnected } = useVapi()
-
-  const handleSpeak = (message: string) => {
-    if (isConnected) {
-      speak(message)
-    }
-  }
-
-  const handleVoiceToggle = () => {
-    if (connectionState === "connected") {
-      stopCall()
-    } else if (connectionState === "idle" || connectionState === "error") {
-      startCall()
-    }
-  }
-
-  // Cleanup call when chat is closed
-  const handleClose = () => {
-    if (connectionState === "connected") {
-      stopCall()
-    }
-    setIsOpen(false)
-  }
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,16 +53,16 @@ export function ChatBox() {
       }
     }
   }
-
   const clearMessages = () => {
     setMessages([
       {
         id: "1",
-        role: "assistant",
-        content: "Hi! What do want to know about Emjay?"
+        role: "system",
+        content: "What do you wanna know about emjay?"
       }
     ])
   }
+
 
   return (
     <>
@@ -120,54 +107,25 @@ export function ChatBox() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md mx-auto"
+              onClick={(e) => e.stopPropagation()} className="w-full max-w-2xl mx-auto"
             >
-              <Card className="h-[500px] md:h-[600px] flex flex-col">                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                <CardTitle className="text-lg">Let's Chat!</CardTitle>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={connectionState === "connected" ? "default" : "outline"}
-                    size="sm"
-                    onClick={handleVoiceToggle}
-                    disabled={connectionState === "connecting"}
-                    title={
-                      connectionState === "connected"
-                        ? "Stop voice session"
-                        : connectionState === "connecting"
-                          ? "Connecting..."
-                          : "Start voice session"
-                    }
-                  >
-                    {connectionState === "connecting" ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-b-transparent" />
-                    ) : connectionState === "connected" ? (
-                      <MicOff className="h-4 w-4" />
-                    ) : (
-                      <Mic className="h-4 w-4" />
-                    )}
-                    <span className="ml-1 text-xs">
-                      {connectionState === "connected"
-                        ? "Voice On"
-                        : connectionState === "connecting"
-                          ? "Connecting"
-                          : "Voice Off"
-                      }
-                    </span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={clearMessages}
-                    title="Clear messages"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={handleClose}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardHeader>
+              <Card className="h-[70vh] md:h-[80vh] max-h-[700px] flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                  <CardTitle className="text-lg">Let's Chat!</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={clearMessages}
+                      title="Clear messages"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
 
                 <CardContent className="flex-1 flex flex-col overflow-hidden">
                   {/* Messages */}
@@ -179,49 +137,96 @@ export function ChatBox() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
-                          className={`flex items-center gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                          className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                        >                          <div
+                          className={`max-w-[85%] p-3 rounded-lg overflow-hidden ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                            }`}
                         >
-                          <div
-                            className={`max-w-[80%] p-3 rounded-lg ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
-                              }`}
-                          >
-                            <p className="text-sm">{message.content}</p>
-                          </div>                          {message.role === "assistant" && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleSpeak(message.content)}
-                              disabled={!isConnected || isSpeaking}
-                              title={
-                                !isConnected
-                                  ? "Start voice session first"
-                                  : isSpeaking
-                                    ? "Speaking..."
-                                    : "Play message"
-                              }
-                            >
-                              <Play className={`h-4 w-4 ${isSpeaking ? "animate-pulse" : ""} ${!isConnected ? "opacity-50" : ""}`} />
-                            </Button>
-                          )}
+                            {/* Render message parts if available, otherwise fall back to content */}
+                            {message.parts && message.parts.length > 0 ? (
+                              <div className="space-y-2">
+                                {message.parts.map((part, partIndex) => {
+                                  switch (part.type) {
+                                    case 'text':
+                                      return (
+                                        <div key={partIndex} className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
+                                          <ReactMarkdown>{part.text}</ReactMarkdown>
+                                        </div>
+                                      );
+                                    case 'tool-invocation':
+                                      const { toolInvocation } = part;
+                                      return (
+                                        <div key={partIndex} className="space-y-2">                                          {toolInvocation.state === 'partial-call' && (
+                                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                            <div className="flex space-x-1">
+                                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
+                                            </div>
+                                            <span>Preparing {formatToolName(toolInvocation.toolName)}...</span>
+                                          </div>
+                                        )}
+                                          {toolInvocation.state === 'call' && (
+                                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                              <div className="flex space-x-1">
+                                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce"></div>
+                                              </div>
+                                              <span>🔧 Calling {formatToolName(toolInvocation.toolName)}...</span>
+                                            </div>
+                                          )}
+                                          {toolInvocation.state === 'result' && (
+                                            <div className="text-xs text-muted-foreground mb-1">
+                                              <span className="inline-flex items-center gap-1">
+                                                ✅ <span className="font-medium">{formatToolName(toolInvocation.toolName)}</span> completed
+                                              </span>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    default:
+                                      return null;
+                                  }
+                                })}
+                              </div>) : (
+                              // Backward compatibility: show content if no parts
+                              <div className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
+                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                              </div>
+                            )}
+                          </div>
                         </motion.div>
                       ))}
-                    </AnimatePresence>
-
-                    {/* Show loading indicator when AI is responding */}
+                    </AnimatePresence>                    {/* Show loading indicator when AI is responding */}
                     {(status === 'submitted' || status === 'streaming') && (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="flex justify-start"
                       >
-                        <div className="max-w-[80%] p-3 rounded-lg bg-muted">
+                        <div className="max-w-[85%] p-3 rounded-lg bg-muted overflow-hidden">
                           <div className="flex items-center space-x-2">
                             <div className="flex space-x-1">
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                            </div>
-                            <span className="text-sm text-muted-foreground">AI is typing...</span>
+                              <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                              <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                              <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
+                            </div>                            <span className="text-sm text-muted-foreground">
+                              {(() => {
+                                // Check if the last message has any tool invocations in progress
+                                const lastMessage = messages[messages.length - 1];
+                                if (lastMessage?.parts) {
+                                  const toolInvocations = lastMessage.parts.filter(part => part.type === 'tool-invocation');
+                                  const activeTool = toolInvocations.find(part =>
+                                    part.toolInvocation?.state === 'call' || part.toolInvocation?.state === 'partial-call'
+                                  );
+                                  if (activeTool) {
+                                    return `Using ${formatToolName(activeTool.toolInvocation.toolName)}...`;
+                                  }
+                                }
+                                return "AI is thinking...";
+                              })()}
+                            </span>
                           </div>
                         </div>
                       </motion.div>
@@ -256,8 +261,7 @@ export function ChatBox() {
                 </CardContent>
               </Card>
             </motion.div>
-          </motion.div>
-        )}
+          </motion.div>)}
       </AnimatePresence>
     </>
   )
