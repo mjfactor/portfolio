@@ -1,13 +1,9 @@
-import dotenv from 'dotenv';
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
 import {
     AzureAISearchVectorStore,
     AzureAISearchQueryType,
 } from "@langchain/community/vectorstores/azure_aisearch";
-
-// Load environment variables
-dotenv.config();
 
 export async function createRetriever() {
     try {
