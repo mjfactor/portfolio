@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import { JSONLoader } from "langchain/document_loaders/fs/json";
+import { PlaywrightWebBaseLoader } from "@langchain/community/document_loaders/web/playwright";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
@@ -8,21 +7,88 @@ import {
     AzureAISearchVectorStore,
     AzureAISearchQueryType,
 } from "@langchain/community/vectorstores/azure_aisearch";
+import type { Document } from "@langchain/core/documents";
 
 // Load environment variables
 dotenv.config();
 
-// Shared embedding configuration (same as retriever)
-function createEmbeddings(taskType: TaskType) {
-    if (!process.env.GOOGLE_API_KEY) {
-        throw new Error("❌ GOOGLE_API_KEY not found in environment variables");
+// Configuration for websites to scrape
+const WEBSITES_TO_SCRAPE = [
+    "https://portfolio-emjay-factor.vercel.app/",
+    // Add more URLs here if needed
+];
+
+async function loadWebsiteContent(): Promise<Document[]> {
+    console.log("🌐 Loading website content...");
+    const allWebDocs: Document[] = [];
+
+    for (const url of WEBSITES_TO_SCRAPE) {
+        try {
+            console.log(`📥 Scraping: ${url}`);
+
+            const webLoader = new PlaywrightWebBaseLoader(url, {
+                launchOptions: {
+                    headless: true,
+                },
+                gotoOptions: {
+                    waitUntil: "domcontentloaded",
+                },
+                // Custom evaluate function to extract clean text content
+                async evaluate(page) {
+                    // Remove scripts, styles, and other non-content elements
+                    await page.evaluate(() => {
+                        const elementsToRemove = document.querySelectorAll('script, style, nav, footer, header, aside, .nav, .footer, .header');
+                        elementsToRemove.forEach(el => el.remove());
+                    });
+                    // Extract main content, focusing on text-heavy elements
+                    const result = await page.evaluate(() => {
+                        const contentSelectors = [
+                            'main',
+                            '[role="main"]',
+                            '.content',
+                            '.main-content',
+                            'article',
+                            '.post',
+                            '.page-content',
+                            'body'
+                        ];
+
+                        for (const selector of contentSelectors) {
+                            const element = document.querySelector(selector) as HTMLElement;
+                            if (element) {
+                                return element.innerText || element.textContent || '';
+                            }
+                        }
+
+                        // Fallback to body content
+                        return document.body.innerText || document.body.textContent || '';
+                    });
+
+                    return result;
+                },
+            });
+
+            const webDocs = await webLoader.load();
+            console.log(`✅ Loaded content from ${url} (${webDocs[0]?.pageContent.length || 0} characters)`);
+
+            // Add URL metadata to documents
+            webDocs.forEach(doc => {
+                doc.metadata = {
+                    ...doc.metadata,
+                    source: url,
+                    type: 'website',
+                };
+            });
+
+            allWebDocs.push(...webDocs);
+        } catch (error) {
+            console.error(`❌ Failed to scrape ${url}:`, error);
+            // Continue with other URLs even if one fails
+        }
     }
 
-    return new GoogleGenerativeAIEmbeddings({
-        model: "text-embedding-004",
-        taskType,
-        apiKey: process.env.GOOGLE_API_KEY,
-    });
+    console.log(`✅ Total website documents loaded: ${allWebDocs.length}`);
+    return allWebDocs;
 }
 
 async function setupRAG() {
@@ -34,47 +100,37 @@ async function setupRAG() {
     }
     if (!process.env.AZURE_AISEARCH_KEY) {
         throw new Error("❌ AZURE_AISEARCH_KEY not found in environment variables");
-    }
-
-    console.log("✅ Environment variables loaded successfully");
-    console.log(`🔗 Azure endpoint: ${process.env.AZURE_AISEARCH_ENDPOINT}`);    // 1. Load PDF and JSON documents
+    } console.log("✅ Environment variables loaded successfully");
+    console.log(`🔗 Azure endpoint: ${process.env.AZURE_AISEARCH_ENDPOINT}`);
     console.log("📄 Loading documents...");
 
-    // Load PDF
-    const pdfLoader = new PDFLoader("./data/portfolio.pdf");
-    const pdfDocs = await pdfLoader.load();
-    console.log(`✅ Loaded ${pdfDocs.length} pages from PDF`);
+    // Load website content
+    const webDocs = await loadWebsiteContent();
 
-    // Load JSON
-    const jsonLoader = new JSONLoader("./data/projects.json");
-    const jsonDocs = await jsonLoader.load();
-    console.log(`✅ Loaded ${jsonDocs.length} documents from JSON`);
-
-    // Combine all documents
-    const allDocs = [...pdfDocs, ...jsonDocs];
-    console.log(`📊 Total documents: ${allDocs.length}`);
-
-    // 2. Split into chunks    console.log("✂️ Splitting documents into chunks...");
+    // Split documents into chunks
+    console.log("✂️ Splitting documents into chunks...");
     const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: 1000,
         chunkOverlap: 200,
     });
-    const allSplits = await splitter.splitDocuments(allDocs);
+    const allSplits = await splitter.splitDocuments(webDocs);
     console.log(`✅ Created ${allSplits.length} chunks`);
 
-    // 3. Create embeddings and store in Azure AI Search
+    // Create embeddings and store in Azure AI Search
     console.log("🔗 Creating embeddings and indexing in Azure AI Search...");
     await AzureAISearchVectorStore.fromDocuments(
         allSplits,
-        createEmbeddings(TaskType.RETRIEVAL_DOCUMENT), // Use shared configuration
+        new GoogleGenerativeAIEmbeddings({
+            model: "text-embedding-004",
+            taskType: TaskType.RETRIEVAL_QUERY,
+        }),
         {
             search: {
                 type: AzureAISearchQueryType.SimilarityHybrid,
             },
+            indexName: "emjay-portfolio",
         }
-    );
-
-    console.log("✅ RAG setup complete! Your PDF and JSON documents are indexed.");
+    ); console.log("✅ RAG setup complete! Your website documents are indexed.");
 }
 
 setupRAG().catch(console.error);

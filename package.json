@@ -11,7 +11,7 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push",
 		"db:pull": "drizzle-kit pull",
-		"rag:setup": "tsx lib/rag/index.ts"
+		"rag:index": "tsx lib/rag/index.ts"
 	},
 	"dependencies": {
 		"@ai-sdk/google": "^1.2.19",

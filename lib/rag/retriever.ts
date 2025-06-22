@@ -5,20 +5,6 @@ import {
     AzureAISearchQueryType,
 } from "@langchain/community/vectorstores/azure_aisearch";
 
-// Shared embedding configuration to ensure consistency
-function createEmbeddings(taskType: TaskType) {
-    if (!process.env.GOOGLE_API_KEY) {
-        throw new Error("❌ GOOGLE_API_KEY not found in environment variables");
-    }
-
-    return new GoogleGenerativeAIEmbeddings({
-        model: "text-embedding-004",
-        taskType,
-        apiKey: process.env.GOOGLE_API_KEY,
-    });
-}
-
-// Create a retriever instance that connects to your existing Azure AI Search index
 export async function createRetriever() {
     try {
         // Validate Azure AI Search environment variables
@@ -27,20 +13,18 @@ export async function createRetriever() {
         }
         if (!process.env.AZURE_AISEARCH_KEY) {
             throw new Error("❌ AZURE_AISEARCH_KEY not found in environment variables");
-        }
-
-        const embeddings = createEmbeddings(TaskType.RETRIEVAL_QUERY);
-
-        const vectorStore = new AzureAISearchVectorStore(
-            embeddings, {
+        } const vectorStore = new AzureAISearchVectorStore(
+            new GoogleGenerativeAIEmbeddings({
+                model: "text-embedding-004",
+                taskType: TaskType.RETRIEVAL_QUERY,
+            }), {
             search: {
                 type: AzureAISearchQueryType.SimilarityHybrid,
             },
-        });
-
-        return vectorStore.asRetriever({
-            k: 3, 
-            searchType: "similarity",
+            indexName: "emjay-portfolio",
+        }); return vectorStore.asRetriever({
+            k: 4,
+            searchType: "similarity"
         });
     } catch (error) {
         console.error("Failed to create retriever:", error);
@@ -54,7 +38,7 @@ export async function retrieveContext(query: string): Promise<string> {
         const docs = await retriever.invoke(query);
 
         if (!docs || docs.length === 0) {
-            return "No relevant information found in the portfolio.";
+            return "No relevant information found in the resume.";
         }
         return docs.map(doc => doc.pageContent).join("\n\n");
     } catch (error) {
