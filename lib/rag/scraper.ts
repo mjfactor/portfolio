@@ -92,9 +92,7 @@ async function loadWebsiteContent(): Promise<Document[]> {
     return allWebDocs;
 }
 
-export async function createIndex() {
-    console.log("🚀 Starting RAG setup...");
-
+async function prepareDocuments(): Promise<Document[]> {
     console.log("📄 Loading documents...");
 
     // Load website content
@@ -109,10 +107,13 @@ export async function createIndex() {
     const allSplits = await splitter.splitDocuments(webDocs);
     console.log(`✅ Created ${allSplits.length} chunks`);
 
-    // Create embeddings and store in Azure AI Search
+    return allSplits;
+}
+
+async function createIndexFromDocuments(documents: Document[], indexName: string = "emjay-portfolio"): Promise<void> {
     console.log("🔗 Creating embeddings and indexing in Azure AI Search...");
     await AzureAISearchVectorStore.fromDocuments(
-        allSplits,
+        documents,
         new GoogleGenerativeAIEmbeddings({
             model: "text-embedding-004",
             taskType: TaskType.RETRIEVAL_QUERY,
@@ -121,38 +122,74 @@ export async function createIndex() {
             search: {
                 type: AzureAISearchQueryType.SimilarityHybrid,
             },
-            indexName: "emjay-portfolio",
+            indexName,
         }
     );
+}
+
+export async function createIndex() {
+    console.log("🚀 Starting RAG setup...");
+
+    const documents = await prepareDocuments();
+    await createIndexFromDocuments(documents);
 
     console.log("✅ RAG setup complete! Your website documents are indexed.");
 }
 
 export async function recreateIndex(indexName: string = "emjay-portfolio"): Promise<void> {
     try {
-        // Delete existing index
+        // Validate credentials first
         if (!process.env.AZURE_AISEARCH_ENDPOINT || !process.env.AZURE_AISEARCH_KEY) {
             throw new Error("Azure AI Search credentials not found");
         }
 
+        console.log("🧪 Testing website scraping before modifying index...");
+        
+        // First, try to scrape and prepare documents
+        // If this fails, we exit early without touching the existing index
+        let documents: Document[];
+        try {
+            documents = await prepareDocuments();
+            
+            if (documents.length === 0) {
+                throw new Error("No documents were successfully scraped from the website");
+            }
+            
+            console.log(`✅ Successfully prepared ${documents.length} document chunks for indexing`);
+        } catch (scrapeError) {
+            console.error("❌ Website scraping failed. Preserving existing index.");
+            console.error("Scraping error:", scrapeError);
+            throw new Error(`Scraping failed: ${scrapeError instanceof Error ? scrapeError.message : 'Unknown error'}`);
+        }
+
+        // Only proceed to delete and recreate the index if scraping was successful
+        console.log("🗑️ Scraping successful. Now safely replacing the existing index...");
+        
         const indexClient = new SearchIndexClient(
             process.env.AZURE_AISEARCH_ENDPOINT,
             new AzureKeyCredential(process.env.AZURE_AISEARCH_KEY)
         );
+        
+        // Delete existing index
         try {
             await indexClient.deleteIndex(indexName);
-            console.log(`✅ Successfully deleted index: ${indexName}`);
+            console.log(`✅ Successfully deleted existing index: ${indexName}`);
         } catch (error: any) {
             if (error.statusCode !== 404) {
-                console.error("Failed to check index existence:", error);
+                console.error("Failed to delete existing index:", error);
                 throw error;
             }
+            console.log(`ℹ️ Index ${indexName} did not exist, creating fresh index`);
         }
-        console.log("🔄 Recreating index with fresh data...");
-        await createIndex();
+        
+        // Create new index with the successfully scraped documents
+        console.log("🔄 Creating new index with fresh data...");
+        await createIndexFromDocuments(documents, indexName);
+        
+        console.log("✅ Index recreation completed successfully!");
 
     } catch (error) {
-        console.error("Failed to recreate index:", error);
+        console.error("❌ Failed to recreate index:", error);
         throw error;
     }
 }

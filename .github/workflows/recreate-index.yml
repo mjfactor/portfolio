@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
       - name: Run recreateIndex script
         run: pnpm tsx lib/rag/runRecreateIndex.ts
         env:
