@@ -39,8 +39,8 @@ jobs:
 
       - name: Wait for deployment propagation
         run: |
-          echo "⏳ Waiting 2 minutes for Vercel deployment to fully propagate..."
-          sleep 120
+          echo "⏳ Waiting 1.5 minutes for Vercel deployment to fully propagate..."
+          sleep 90
           echo "✅ Wait complete, proceeding with index recreation"
 
       - name: Run recreateIndex script
