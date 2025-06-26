@@ -68,7 +68,7 @@ export function AboutMe() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center mb-16"
         >
-          <h1 className="text-3xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent leading-tight pb-2">
             Hi, I'm Emjay
           </h1>
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-foreground">
