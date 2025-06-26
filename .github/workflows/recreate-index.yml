@@ -38,29 +38,13 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Wait for Vercel deployment
-        run: |
-          echo "⏳ Waiting for Vercel deployment to complete..."
-          timeout=300  # 5 minutes timeout
-          interval=10  # Check every 10 seconds
-          elapsed=0
-          
-          while [ $elapsed -lt $timeout ]; do
-            if curl -s -o /dev/null -w "%{http_code}" https://portfolio-emjay-factor.vercel.app/ | grep -q "200"; then
-              echo "✅ Vercel deployment is ready!"
-              echo "⏳ Waiting additional 30 seconds for full propagation..."
-              sleep 30
-              break
-            else
-              echo "⏳ Deployment not ready yet, waiting ${interval} seconds... (${elapsed}/${timeout}s elapsed)"
-              sleep $interval
-              elapsed=$((elapsed + interval))
-            fi
-          done
-          
-          if [ $elapsed -ge $timeout ]; then
-            echo "❌ Timeout waiting for Vercel deployment"
-            exit 1
-          fi
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Vercel'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          allowed-conclusions: success
 
       - name: Run recreateIndex script
         run: pnpm tsx lib/rag/runRecreateIndex.ts
