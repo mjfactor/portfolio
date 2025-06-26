@@ -22,7 +22,7 @@ import {
 export function AboutMe() {
   const skills = [
     "TypeScript", "React", "Next.js", "Node.js", "Python", "LangChain/LangGraph", "PostgreSQL",
-    "Docker", "Vercel", "Google AI Studio", "Vercel AI Sdk",
+    "Docker", "Vercel", "Google AI Studio", "Vercel AI Sdk", "AWS",
   ]
 
   const skillIcons = {
@@ -38,6 +38,7 @@ export function AboutMe() {
     "Vercel": Zap,
     "GitHub Actions": GitBranch,
     "Vercel AI Sdk": Brain,
+    "AWS": Cloud,
   }
 
   const focusAreas = [
