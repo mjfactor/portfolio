@@ -1,0 +1,32 @@
+name: Recreate Azure AI Search Index
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  recreate-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run recreateIndex script
+        run: pnpm tsx lib/rag/runRecreateIndex.ts
+        env:
+          AZURE_AISEARCH_ENDPOINT: ${{ secrets.AZURE_AISEARCH_ENDPOINT }}
+          AZURE_AISEARCH_KEY: ${{ secrets.AZURE_AISEARCH_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
