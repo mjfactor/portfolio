@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
-  title: "Emjay's Portfolio",
+  title: "Emjay | Portfolio",
   description: "A modern portfolio website showcasing creative projects and development skills.",
   keywords: ["portfolio", "developer", "web development", "projects"],
   authors: [{ name: "Emjay" }],
@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://portfolio-emjay-factor.vercel.app/', // Replace with your actual domain
-    title: "Emjay's Portfolio",
+    title: "Emjay | Portfolio",
     description: "A modern portfolio website showcasing creative projects and development skills with AI-powered chat assistant.",
-    siteName: "Emjay's Portfolio",
+    siteName: "Emjay | Portfolio",
     images: [
       {
         url: 'https://portfolio-emjay-factor.vercel.app/opengraph-image.png', // Ensure this path is correct

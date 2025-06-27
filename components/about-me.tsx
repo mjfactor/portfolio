@@ -10,7 +10,6 @@ import {
   Server,
   Brain,
   Link,
-  Palette,
   Database,
   Container,
   Cloud,
@@ -21,25 +20,19 @@ import {
 
 export function AboutMe() {
   const skills = [
-    "TypeScript", "React", "Next.js", "Node.js", "Python", "LangChain/LangGraph", "PostgreSQL",
-    "Docker", "Vercel", "Google AI Studio", "Vercel AI Sdk", "AWS",
+    { name: "TypeScript", icon: Code2 },
+    { name: "React", icon: Component },
+    { name: "Next.js", icon: Globe },
+    { name: "Node.js", icon: Server },
+    { name: "Python", icon: Code2 },
+    { name: "LangChain/LangGraph", icon: Link },
+    { name: "PostgreSQL", icon: Database },
+    { name: "Docker", icon: Container },
+    { name: "Vercel", icon: Zap },
+    { name: "Google AI Studio", icon: Brain },
+    { name: "Vercel AI Sdk", icon: Brain },
+    { name: "Azure", icon: Cloud },
   ]
-
-  const skillIcons = {
-    "TypeScript": Code2,
-    "React": Component,
-    "Next.js": Globe,
-    "Google AI Studio": Brain,
-    "Node.js": Server,
-    "Python": Code2,
-    "LangChain/LangGraph": Link,
-    "PostgreSQL": Database,
-    "Docker": Container,
-    "Vercel": Zap,
-    "GitHub Actions": GitBranch,
-    "Vercel AI Sdk": Brain,
-    "AWS": Cloud,
-  }
 
   const focusAreas = [
     {
@@ -91,17 +84,17 @@ export function AboutMe() {
             Technologies & Tools
           </h3>          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skills.map((skill, index) => {
-              const IconComponent = skillIcons[skill as keyof typeof skillIcons]
+              const IconComponent = skill.icon
               return (
                 <motion.div
-                  key={skill}
+                  key={skill.name}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                 >
                   <Badge variant="secondary" className="text-sm py-2 px-4 hover:bg-primary/20 transition-colors flex items-center gap-2">
                     <IconComponent size={16} className="text-primary" />
-                    {skill}
+                    {skill.name}
                   </Badge>
                 </motion.div>
               )
