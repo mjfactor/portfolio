@@ -20,7 +20,7 @@ const WEBSITES_TO_SCRAPE = [
 ];
 
 const PDF_URLS_TO_SCRAPE = [
-    "http://localhost:3000/Emjay_Factor_Resume.pdf"
+    "https://portfolio-emjay-factor.vercel.app/Emjay_Factor_Resume.pdf"
 ];
 
 async function loadPDFContent(): Promise<Document[]> {
