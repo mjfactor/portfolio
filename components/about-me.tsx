@@ -25,7 +25,7 @@ export function AboutMe() {
     { name: "Next.js", icon: Globe },
     { name: "Node.js", icon: Server },
     { name: "Python", icon: Code2 },
-    { name: "LangChain/LangGraph", icon: Link },
+    { name: "LangChain", icon: Link },
     { name: "PostgreSQL", icon: Database },
     { name: "Docker", icon: Container },
     { name: "Vercel", icon: Zap },
