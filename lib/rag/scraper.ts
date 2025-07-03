@@ -138,30 +138,60 @@ async function loadWebsiteContent(): Promise<Document[]> {
     return allWebDocs;
 }
 
-async function prepareDocuments(): Promise<Document[]> {
+interface PreparedDocuments {
+    portfolioDocuments: Document[];
+    resumeDocuments: Document[];
+}
+
+async function prepareDocuments(): Promise<PreparedDocuments> {
     console.log("📄 Loading documents...");
 
     // Load website content and PDF content separately
     const webDocs = await loadWebsiteContent();
     const pdfDocs = await loadPDFContent();
 
-    // Combine all documents
-    const allDocs = [...webDocs, ...pdfDocs];
+    // Add document type metadata
+    webDocs.forEach(doc => {
+        doc.metadata = {
+            ...doc.metadata,
+            documentType: 'portfolio',
+            indexType: 'portfolio'
+        };
+    });
+
+    pdfDocs.forEach(doc => {
+        doc.metadata = {
+            ...doc.metadata,
+            documentType: 'resume',
+            indexType: 'resume'
+        };
+    });
 
     // Split documents into chunks
-    console.log("✂️ Splitting documents into chunks...");
-    const splitter = new RecursiveCharacterTextSplitter({
+    console.log("✂️ Splitting portfolio documents into chunks...");
+    const portfolioSplitter = new RecursiveCharacterTextSplitter({
         chunkSize: 1000,
         chunkOverlap: 200,
     });
-    const allSplits = await splitter.splitDocuments(allDocs);
-    console.log(`✅ Created ${allSplits.length} chunks`);
+    const portfolioSplits = await portfolioSplitter.splitDocuments(webDocs);
+    console.log(`✅ Created ${portfolioSplits.length} portfolio chunks`);
 
-    return allSplits;
+    console.log("✂️ Splitting resume documents into chunks...");
+    const resumeSplitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 1000,
+        chunkOverlap: 200,
+    });
+    const resumeSplits = await resumeSplitter.splitDocuments(pdfDocs);
+    console.log(`✅ Created ${resumeSplits.length} resume chunks`);
+
+    return {
+        portfolioDocuments: portfolioSplits,
+        resumeDocuments: resumeSplits
+    };
 }
 
-async function createIndexFromDocuments(documents: Document[], indexName: string = "emjay-portfolio"): Promise<void> {
-    console.log("🔗 Creating embeddings and indexing in Azure AI Search...");
+async function createPortfolioIndex(documents: Document[], indexName: string = "emjay-portfolio"): Promise<void> {
+    console.log("🔗 Creating embeddings and indexing portfolio documents in Azure AI Search...");
     await AzureAISearchVectorStore.fromDocuments(
         documents,
         new GoogleGenerativeAIEmbeddings({
@@ -175,71 +205,112 @@ async function createIndexFromDocuments(documents: Document[], indexName: string
             indexName,
         }
     );
+    console.log(`✅ Portfolio index '${indexName}' created successfully`);
+}
+
+async function createResumeIndex(documents: Document[], indexName: string = "emjay-resume"): Promise<void> {
+    console.log("🔗 Creating embeddings and indexing resume documents in Azure AI Search...");
+    await AzureAISearchVectorStore.fromDocuments(
+        documents,
+        new GoogleGenerativeAIEmbeddings({
+            model: "text-embedding-004",
+            taskType: TaskType.RETRIEVAL_QUERY,
+        }),
+        {
+            search: {
+                type: AzureAISearchQueryType.SimilarityHybrid,
+            },
+            indexName,
+        }
+    );
+    console.log(`✅ Resume index '${indexName}' created successfully`);
 }
 
 export async function createIndex() {
     console.log("🚀 Starting RAG setup...");
 
     const documents = await prepareDocuments();
-    await createIndexFromDocuments(documents);
 
-    console.log("✅ RAG setup complete! Your website documents are indexed.");
+    // Create portfolio index
+    await createPortfolioIndex(documents.portfolioDocuments);
+
+    // Create resume index  
+    await createResumeIndex(documents.resumeDocuments);
+
+    console.log("✅ RAG setup complete! Both portfolio and resume documents are indexed.");
 }
 
-export async function recreateIndex(indexName: string = "emjay-portfolio"): Promise<void> {
+export async function recreateIndex(portfolioIndexName: string = "emjay-portfolio", resumeIndexName: string = "emjay-resume"): Promise<void> {
     try {
         // Validate credentials first
         if (!process.env.AZURE_AISEARCH_ENDPOINT || !process.env.AZURE_AISEARCH_KEY) {
             throw new Error("Azure AI Search credentials not found");
         }
 
-        console.log("🧪 Testing website scraping before modifying index...");
+        console.log("🧪 Testing website scraping before modifying indexes...");
 
         // First, try to scrape and prepare documents
-        // If this fails, we exit early without touching the existing index
-        let documents: Document[];
+        // If this fails, we exit early without touching the existing indexes
+        let documents: PreparedDocuments;
         try {
             documents = await prepareDocuments();
 
-            if (documents.length === 0) {
-                throw new Error("No documents were successfully scraped from the website");
+            if (documents.portfolioDocuments.length === 0 && documents.resumeDocuments.length === 0) {
+                throw new Error("No documents were successfully scraped from the website or PDF");
             }
 
-            console.log(`✅ Successfully prepared ${documents.length} document chunks for indexing`);
+            console.log(`✅ Successfully prepared ${documents.portfolioDocuments.length} portfolio chunks and ${documents.resumeDocuments.length} resume chunks for indexing`);
         } catch (scrapeError) {
-            console.error("❌ Website scraping failed. Preserving existing index.");
+            console.error("❌ Website scraping failed. Preserving existing indexes.");
             console.error("Scraping error:", scrapeError);
             throw new Error(`Scraping failed: ${scrapeError instanceof Error ? scrapeError.message : 'Unknown error'}`);
         }
 
-        // Only proceed to delete and recreate the index if scraping was successful
-        console.log("🗑️ Scraping successful. Now safely replacing the existing index...");
+        // Only proceed to delete and recreate the indexes if scraping was successful
+        console.log("🗑️ Scraping successful. Now safely replacing the existing indexes...");
 
         const indexClient = new SearchIndexClient(
             process.env.AZURE_AISEARCH_ENDPOINT,
             new AzureKeyCredential(process.env.AZURE_AISEARCH_KEY)
         );
 
-        // Delete existing index
+        // Delete existing portfolio index
         try {
-            await indexClient.deleteIndex(indexName);
-            console.log(`✅ Successfully deleted existing index: ${indexName}`);
+            await indexClient.deleteIndex(portfolioIndexName);
+            console.log(`✅ Successfully deleted existing portfolio index: ${portfolioIndexName}`);
         } catch (error: any) {
             if (error.statusCode !== 404) {
-                console.error("Failed to delete existing index:", error);
+                console.error("Failed to delete existing portfolio index:", error);
                 throw error;
             }
-            console.log(`ℹ️ Index ${indexName} did not exist, creating fresh index`);
+            console.log(`ℹ️ Portfolio index ${portfolioIndexName} did not exist, creating fresh index`);
         }
 
-        // Create new index with the successfully scraped documents
-        console.log("🔄 Creating new index with fresh data...");
-        await createIndexFromDocuments(documents, indexName);
+        // Delete existing resume index
+        try {
+            await indexClient.deleteIndex(resumeIndexName);
+            console.log(`✅ Successfully deleted existing resume index: ${resumeIndexName}`);
+        } catch (error: any) {
+            if (error.statusCode !== 404) {
+                console.error("Failed to delete existing resume index:", error);
+                throw error;
+            }
+            console.log(`ℹ️ Resume index ${resumeIndexName} did not exist, creating fresh index`);
+        }
 
-        console.log("✅ Index recreation completed successfully!");
+        // Create new indexes with the successfully scraped documents
+        console.log("🔄 Creating new indexes with fresh data...");
+
+        // Create portfolio index
+        await createPortfolioIndex(documents.portfolioDocuments, portfolioIndexName);
+
+        // Create resume index
+        await createResumeIndex(documents.resumeDocuments, resumeIndexName);
+
+        console.log("✅ Index recreation completed successfully! Both portfolio and resume indexes have been updated.");
 
     } catch (error) {
-        console.error("❌ Failed to recreate index:", error);
+        console.error("❌ Failed to recreate indexes:", error);
         throw error;
     }
 }

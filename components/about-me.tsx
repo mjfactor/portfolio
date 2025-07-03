@@ -15,8 +15,7 @@ import {
   Container,
   Cloud,
   Zap,
-  GitBranch,
-  FileText,
+  Download
 } from "lucide-react"
 
 export function AboutMe() {
@@ -92,8 +91,8 @@ export function AboutMe() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"
               >
-                <FileText size={18} />
-                View Resume
+                <Download size={18} />
+                Download Resume
               </a>
             </Button>
           </motion.div>
