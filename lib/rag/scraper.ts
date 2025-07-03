@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { PlaywrightWebBaseLoader } from "@langchain/community/document_loaders/web/playwright";
+import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
@@ -13,11 +14,56 @@ import type { Document } from "@langchain/core/documents";
 // Load environment variables
 dotenv.config();
 
-// Configuration for websites to scrape
+// Configuration for websites and documents to scrape
 const WEBSITES_TO_SCRAPE = [
     "https://portfolio-emjay-factor.vercel.app/",
-    // Add more URLs here if needed
 ];
+
+const PDF_URLS_TO_SCRAPE = [
+    "http://localhost:3000/Emjay_Factor_Resume.pdf"
+];
+
+async function loadPDFContent(): Promise<Document[]> {
+    console.log("📄 Loading PDF content...");
+    const allPDFDocs: Document[] = [];
+
+    for (const url of PDF_URLS_TO_SCRAPE) {
+        try {
+            console.log(`📥 Loading PDF: ${url}`);
+
+            // Fetch the PDF as a blob
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const pdfLoader = new WebPDFLoader(blob, {
+                splitPages: false, // Keep PDF content as single document
+            });
+
+            const pdfDocs = await pdfLoader.load();
+            console.log(`✅ Loaded PDF content from ${url} (${pdfDocs[0]?.pageContent.length || 0} characters)`);
+
+            // Add URL metadata to documents
+            pdfDocs.forEach(doc => {
+                doc.metadata = {
+                    ...doc.metadata,
+                    source: url,
+                    type: 'pdf',
+                };
+            });
+
+            allPDFDocs.push(...pdfDocs);
+        } catch (error) {
+            console.error(`❌ Failed to load PDF ${url}:`, error);
+            // Continue with other PDFs even if one fails
+        }
+    }
+
+    console.log(`✅ Total PDF documents loaded: ${allPDFDocs.length}`);
+    return allPDFDocs;
+}
 
 async function loadWebsiteContent(): Promise<Document[]> {
     console.log("🌐 Loading website content...");
@@ -95,8 +141,12 @@ async function loadWebsiteContent(): Promise<Document[]> {
 async function prepareDocuments(): Promise<Document[]> {
     console.log("📄 Loading documents...");
 
-    // Load website content
+    // Load website content and PDF content separately
     const webDocs = await loadWebsiteContent();
+    const pdfDocs = await loadPDFContent();
+
+    // Combine all documents
+    const allDocs = [...webDocs, ...pdfDocs];
 
     // Split documents into chunks
     console.log("✂️ Splitting documents into chunks...");
@@ -104,7 +154,7 @@ async function prepareDocuments(): Promise<Document[]> {
         chunkSize: 1000,
         chunkOverlap: 200,
     });
-    const allSplits = await splitter.splitDocuments(webDocs);
+    const allSplits = await splitter.splitDocuments(allDocs);
     console.log(`✅ Created ${allSplits.length} chunks`);
 
     return allSplits;
@@ -144,17 +194,17 @@ export async function recreateIndex(indexName: string = "emjay-portfolio"): Prom
         }
 
         console.log("🧪 Testing website scraping before modifying index...");
-        
+
         // First, try to scrape and prepare documents
         // If this fails, we exit early without touching the existing index
         let documents: Document[];
         try {
             documents = await prepareDocuments();
-            
+
             if (documents.length === 0) {
                 throw new Error("No documents were successfully scraped from the website");
             }
-            
+
             console.log(`✅ Successfully prepared ${documents.length} document chunks for indexing`);
         } catch (scrapeError) {
             console.error("❌ Website scraping failed. Preserving existing index.");
@@ -164,12 +214,12 @@ export async function recreateIndex(indexName: string = "emjay-portfolio"): Prom
 
         // Only proceed to delete and recreate the index if scraping was successful
         console.log("🗑️ Scraping successful. Now safely replacing the existing index...");
-        
+
         const indexClient = new SearchIndexClient(
             process.env.AZURE_AISEARCH_ENDPOINT,
             new AzureKeyCredential(process.env.AZURE_AISEARCH_KEY)
         );
-        
+
         // Delete existing index
         try {
             await indexClient.deleteIndex(indexName);
@@ -181,11 +231,11 @@ export async function recreateIndex(indexName: string = "emjay-portfolio"): Prom
             }
             console.log(`ℹ️ Index ${indexName} did not exist, creating fresh index`);
         }
-        
+
         // Create new index with the successfully scraped documents
         console.log("🔄 Creating new index with fresh data...");
         await createIndexFromDocuments(documents, indexName);
-        
+
         console.log("✅ Index recreation completed successfully!");
 
     } catch (error) {

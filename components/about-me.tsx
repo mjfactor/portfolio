@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Code2,
   Component,
@@ -15,7 +16,7 @@ import {
   Cloud,
   Zap,
   GitBranch,
-
+  FileText,
 } from "lucide-react"
 
 export function AboutMe() {
@@ -71,6 +72,31 @@ export function AboutMe() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
             I'm passionate about building intelligent software solutions .
           </p>
+          
+          {/* Resume Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="flex justify-center mb-8"
+          >
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="hover:bg-primary/10 transition-colors"
+            >
+              <a
+                href="/Emjay_Factor_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <FileText size={18} />
+                View Resume
+              </a>
+            </Button>
+          </motion.div>
         </motion.div>
 
         {/* Skills Section */}
