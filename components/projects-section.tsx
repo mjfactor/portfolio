@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github } from "lucide-react"
+import Image from "next/image"
 import {
   Carousel,
   CarouselContent,
@@ -57,9 +58,11 @@ export function ProjectsSection() {
                     <Card className="h-full flex flex-col">
                       <CardHeader className="pb-2">
                         <div className="h-[180px] w-full overflow-hidden rounded-t-lg">
-                          <img
+                          <Image
                             src={project.image}
                             alt={project.title}
+                            width={400}
+                            height={180}
                             className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
                           />
                         </div>
