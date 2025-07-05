@@ -57,5 +57,16 @@
         "image": "/images/portfolio.png",
         "liveUrl": "https://portfolio-emjay-factor.vercel.app/",
         "githubUrl": "https://github.com/mjfactor/portfolio"
+    },
+    {
+        "title": "AI Prompts Github Copilot",
+        "description": "A list of AI Prompts for Github Copilot as NPM packages. This package allows you to easily access and use AI prompts for your github copilot.",
+        "technologies": [
+            "NPM",
+            "JavaScript",
+            "Prompt Engineering"
+        ],
+        "image": "/images/ai-prompts.png",
+        "githubUrl": "https://github.com/mjfactor/ai-prompts"
     }
 ]
