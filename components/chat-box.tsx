@@ -11,6 +11,30 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ReactMarkdown from "react-markdown"
 
+// Custom components for ReactMarkdown
+const markdownComponents = {
+  a: ({ href, children, ...props }: any) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-primary hover:text-primary/80 underline underline-offset-2 transition-colors duration-200 font-medium"
+      {...props}
+    >
+      {children}
+    </a>
+  ),
+  p: ({ children }: any) => (
+    <p className="mb-2 last:mb-0">{children}</p>
+  ),
+  strong: ({ children }: any) => (
+    <strong className="font-semibold text-foreground">{children}</strong>
+  ),
+  em: ({ children }: any) => (
+    <em className="italic text-muted-foreground">{children}</em>
+  )
+}
+
 
 // Helper function to format tool names for display
 const formatToolName = (toolName: string): string => {
@@ -32,7 +56,7 @@ export function ChatBox() {
     initialMessages: [{
       id: "1",
       role: "system",
-      content: "What do you wanna know about emjay?"
+      content: "👋 Hey there! I'm Emjay's AI assistant. I can help you learn about his background, projects, skills, and experience. "
     }]
   })
 
@@ -58,7 +82,7 @@ export function ChatBox() {
       {
         id: "1",
         role: "system",
-        content: "What do you wanna know about emjay?"
+        content: "👋 Hey there! I'm Emjay's AI assistant. I can help you learn about his background, projects, skills, and experience. Feel free to ask me anything about his portfolio, GitHub projects, or professional journey!"
       }
     ])
   }
@@ -150,7 +174,7 @@ export function ChatBox() {
                                     case 'text':
                                       return (
                                         <div key={partIndex} className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
-                                          <ReactMarkdown>{part.text}</ReactMarkdown>
+                                          <ReactMarkdown components={markdownComponents}>{part.text}</ReactMarkdown>
                                         </div>
                                       );
                                     case 'tool-invocation':
@@ -192,7 +216,7 @@ export function ChatBox() {
                               </div>) : (
                               // Backward compatibility: show content if no parts
                               <div className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
-                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                                <ReactMarkdown components={markdownComponents}>{message.content}</ReactMarkdown>
                               </div>
                             )}
                           </div>
@@ -239,7 +263,7 @@ export function ChatBox() {
                       value={input}
                       onChange={handleInputChange}
                       onKeyDown={handleKeyPress}
-                      placeholder="Type your message..."
+                      placeholder="Ask me about Emjay's projects, skills, or experience..."
                       className="flex-1"
                       disabled={status === 'submitted' || status === 'streaming'}
                     />

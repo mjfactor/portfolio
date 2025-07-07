@@ -17,6 +17,7 @@ dotenv.config();
 // Configuration for websites and documents to scrape
 const WEBSITES_TO_SCRAPE = [
     "https://portfolio-emjay-factor.vercel.app/",
+    "https://github.com/mjfactor",
 ];
 
 const PDF_URLS_TO_SCRAPE = [
