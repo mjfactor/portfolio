@@ -47,8 +47,8 @@ export function AboutMe() {
       icon: "💻"
     },
     {
-      title: "Cloud Deployment",
-      description: "Experience with cloud services and deployment strategies",
+      title: "Cloud Computing",
+      description: "Experience with cloud services and deployment",
       icon: "☁️"
     }
   ]
