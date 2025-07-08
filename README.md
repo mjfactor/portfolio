@@ -1,8 +1,5 @@
 # 🚀 Emjay's Portfolio
 
-A modern, AI-powered portfolio website showcasing software development projects with an interactive chat assistant. Built with Next.js, TypeScript, and deployed on Cloudflare Edge.
-
-
 ## 🛠️ Tech Stack
 
 - **Framework:** Next.js 15 with App Router
