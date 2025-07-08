@@ -22,6 +22,7 @@ export function AboutMe() {
   const skills = [
     { name: "TypeScript", icon: Code2 },
     { name: "React", icon: Component },
+    { name: "Google Cloud", icon: Cloud },
     { name: "Next.js", icon: Globe },
     { name: "Node.js", icon: Server },
     { name: "Python", icon: Code2 },
@@ -47,7 +48,7 @@ export function AboutMe() {
     },
     {
       title: "Cloud Deployment",
-      description: "Deploy applications on various cloud platforms",
+      description: "Experience with cloud services and deployment strategies",
       icon: "☁️"
     }
   ]
@@ -71,7 +72,7 @@ export function AboutMe() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
             I'm passionate about building intelligent software solutions .
           </p>
-          
+
           {/* Resume Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -87,7 +88,7 @@ export function AboutMe() {
             >
               <a
                 href="/Emjay_Factor_Resume.pdf"
-                target="_blank"
+                download="Emjay_Factor_Resume.pdf"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"
               >
