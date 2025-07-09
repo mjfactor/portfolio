@@ -30,7 +30,7 @@ export function Footer() {
         {
             icon: Linkedin,
             label: "LinkedIn",
-            href: "https://www.linkedin.com/in/emjay-factor-6b01ab209/",
+            href: "https://linkedin.com/in/emjay-factor",
             hoverColor: "hover:bg-[#0077B5] hover:text-white hover:border-[#0077B5]"
         }
     ]
@@ -63,7 +63,7 @@ export function Footer() {
                                                 href={contact.href}
                                                 className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors group"
                                             >
-                                                <div className="p-1 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                                                <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
                                                     <IconComponent size={16} className="text-primary" />
                                                 </div>
                                                 <div>
