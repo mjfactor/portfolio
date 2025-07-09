@@ -56,7 +56,7 @@ export function ChatBox() {
     initialMessages: [{
       id: "1",
       role: "system",
-      content: "👋 Hey there! I'm Emjay's AI assistant. I can help you learn about his background, projects, skills, and experience. "
+      content: "👋 Hey there! I'm Emjay's AI assistant."
     }]
   })
 
