@@ -5,6 +5,7 @@ import { ProjectsSection } from "@/components/projects-section"
 import { AboutMe } from "@/components/about-me"
 import { ChatBox } from "@/components/chat-box"
 import { AnimatedBackground } from "@/components/animated-background"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <AboutMe />
         <ProjectsSection />
       </main>
+      <Footer />
       {/* Floating Chat Widget */}
       <ChatBox />
     </div>
