@@ -4,35 +4,77 @@ import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
 import {
-  Code2,
-  Component,
-  Globe,
-  Server,
-  Brain,
-  Link,
-  Database,
-  Container,
-  Cloud,
-  Zap,
-  Download
-} from "lucide-react"
+  siTypescript,
+  siNpm,
+  siReact,
+  siGooglecloud,
+  siNextdotjs,
+  siNodedotjs,
+  siPython,
+  siLangchain,
+  siPostgresql,
+  siDocker,
+  siVercel,
+  siGithub,
+  siGooglegemini,
+  siAuchan,
+  siRedis,
+  siCplusplus,
+  siMongodb,
+  siLaravel,
+  siPhp,
+  siCoda
+} from "simple-icons"
+
+// Simple Icons React component wrapper
+interface SimpleIconProps {
+  icon: any
+  size?: number
+  className?: string
+}
+
+function SimpleIcon({ icon, size = 16, className = "" }: SimpleIconProps) {
+  return (
+    <svg
+      role="img"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="currentColor"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d={icon.path} />
+    </svg>
+  )
+}
 
 export function AboutMe() {
   const skills = [
-    { name: "TypeScript", icon: Code2 },
-    { name: "React", icon: Component },
-    { name: "Google Cloud", icon: Cloud },
-    { name: "Next.js", icon: Globe },
-    { name: "Node.js", icon: Server },
-    { name: "Python", icon: Code2 },
-    { name: "LangChain", icon: Link },
-    { name: "PostgreSQL", icon: Database },
-    { name: "Docker", icon: Container },
-    { name: "Vercel", icon: Zap },
-    { name: "Google AI Studio", icon: Brain },
-    { name: "Vercel AI Sdk", icon: Brain },
-    { name: "Azure", icon: Cloud },
+    { name: "TypeScript", icon: siTypescript },
+    { name: "React", icon: siReact },
+    { name: "Google Cloud", icon: siGooglecloud },
+    { name: "Next.js", icon: siNextdotjs },
+    { name: "Node.js", icon: siNodedotjs },
+    { name: "C#", icon: siCoda },
+    { name: "NPM", icon: siNpm },
+    { name: "Python", icon: siPython },
+    { name: "LangChain", icon: siLangchain },
+    { name: "PostgreSQL", icon: siPostgresql },
+    { name: "Docker", icon: siDocker },
+    { name: "PHP", icon: siPhp },
+    { name: "Vercel", icon: siVercel },
+    { name: "Google AI Studio", icon: siGooglegemini },
+    { name: "Vercel AI Sdk", icon: siVercel },
+    { name: "Microsoft Azure", icon: siAuchan },
+    { name: "Github", icon: siGithub },
+    { name: "Express.js", icon: siNodedotjs },
+    { name: "Redis", icon: siRedis },
+    { name: "C++", icon: siCplusplus },
+    { name: "MongoDB", icon: siMongodb },
+    { name: "Laravel", icon: siLaravel },
   ]
 
   const focusAreas = [
@@ -63,8 +105,8 @@ export function AboutMe() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center mb-16"
         >
-          <h1 className="text-3xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent leading-tight pb-2">
-            Hi, I'm Emjay
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent leading-tight pb-2">
+            Emjay Factor
           </h1>
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-foreground">
             AI Applications • Software Applications • Deployment
@@ -107,10 +149,10 @@ export function AboutMe() {
           className="mb-16"
         >
           <h3 className="text-2xl font-semibold text-center mb-8 text-foreground">
-            Technologies & Tools
-          </h3>          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+            Technologies & Tools that I Used
+          </h3>
+          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skills.map((skill, index) => {
-              const IconComponent = skill.icon
               return (
                 <motion.div
                   key={skill.name}
@@ -119,7 +161,7 @@ export function AboutMe() {
                   transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                 >
                   <Badge variant="secondary" className="text-sm py-2 px-4 hover:bg-primary/20 transition-colors flex items-center gap-2">
-                    <IconComponent size={16} className="text-primary" />
+                    <SimpleIcon icon={skill.icon} size={16} className="text-primary" />
                     {skill.name}
                   </Badge>
                 </motion.div>
