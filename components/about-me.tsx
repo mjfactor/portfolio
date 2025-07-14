@@ -23,7 +23,6 @@ import {
   siRedis,
   siCplusplus,
   siMongodb,
-  siLaravel,
   siPhp,
   siCoda
 } from "simple-icons"
@@ -74,7 +73,6 @@ export function AboutMe() {
     { name: "Redis", icon: siRedis },
     { name: "C++", icon: siCplusplus },
     { name: "MongoDB", icon: siMongodb },
-    { name: "Laravel", icon: siLaravel },
   ]
 
   const focusAreas = [
