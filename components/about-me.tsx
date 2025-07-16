@@ -107,7 +107,7 @@ export function AboutMe() {
             Emjay Factor
           </h1>
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-foreground">
-            AI Applications • Software Applications • Deployment
+            AI Applications • Software Applications • Full-Stack Development
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
             I'm passionate about building intelligent software solutions .
