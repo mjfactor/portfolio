@@ -11,6 +11,11 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ReactMarkdown from "react-markdown"
 
+interface ChatBoxProps {
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
+}
+
 // Custom components for ReactMarkdown
 const markdownComponents = {
   a: ({ href, children, ...props }: any) => (
@@ -44,8 +49,7 @@ const formatToolName = (toolName: string): string => {
     .trim();
 };
 
-export function ChatBox() {
-  const [isOpen, setIsOpen] = useState(false)
+export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
 
 
   const { messages, input, handleInputChange, handleSubmit, status, error, setMessages } = useChat({
@@ -56,7 +60,7 @@ export function ChatBox() {
     initialMessages: [{
       id: "1",
       role: "system",
-      content: "👋 Hey there! I'm Emjay's AI assistant."
+      content: "Hi, I'm Emjay's AI Bot assistant."
     }]
   })
 
@@ -82,7 +86,7 @@ export function ChatBox() {
       {
         id: "1",
         role: "system",
-        content: "👋 Hey there! I'm Emjay's AI assistant. I can help you learn about his background, projects, skills, and experience. Feel free to ask me anything about his portfolio, GitHub projects, or professional journey!"
+        content: "Hi, I'm Emjay's AI Bot assistant."
       }
     ])
   }

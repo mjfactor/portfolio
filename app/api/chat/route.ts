@@ -15,7 +15,7 @@ interface ChatRequestBody {
 
 export async function POST(req: Request) {
     const { messages } = await req.json() as ChatRequestBody;
-    const model = google('gemini-2.5-flash-lite-preview-06-17')
+    const model = google('gemini-2.5-flash')
 
     const result = streamText({
         model: model,
@@ -39,6 +39,7 @@ export async function POST(req: Request) {
         - If asked who you are or what model you are, introduce yourself as Emjay's AI portfolio assistant
         - Use markdown formatting for better readability (bold, italic, links, etc.)
         - Keep responses concise but informative
+        - Dont repeat your words
         `,
         messages,
         tools: {

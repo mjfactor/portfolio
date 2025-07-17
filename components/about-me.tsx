@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Download } from "lucide-react"
+import { Download, MessageCircle } from "lucide-react"
 import {
   siTypescript,
   siNpm,
@@ -26,6 +26,10 @@ import {
   siPhp,
   siCoda
 } from "simple-icons"
+
+interface AboutMeProps {
+  onOpenChat: () => void
+}
 
 // Simple Icons React component wrapper
 interface SimpleIconProps {
@@ -50,7 +54,7 @@ function SimpleIcon({ icon, size = 16, className = "" }: SimpleIconProps) {
   )
 }
 
-export function AboutMe() {
+export function AboutMe({ onOpenChat }: AboutMeProps) {
   const skills = [
     { name: "TypeScript", icon: siTypescript },
     { name: "React", icon: siReact },
@@ -94,8 +98,8 @@ export function AboutMe() {
   ]
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 pt-30">
-      <div className="container mx-auto max-w-6xl">
+    <section className="min-h-screen flex items-center justify-center px-4 pt-30 relative bg-grid">
+      <div className="container mx-auto max-w-6xl relative z-10">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -113,13 +117,22 @@ export function AboutMe() {
             I'm passionate about building intelligent software solutions .
           </p>
 
-          {/* Resume Button */}
+          {/* Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="flex justify-center mb-8"
+            className="flex justify-center gap-4 mb-8"
           >
+            <Button
+              onClick={onOpenChat}
+              variant="default"
+              size="lg"
+              className="bg-primary hover:bg-primary/90 transition-colors"
+            >
+              <MessageCircle size={18} />
+              Chat
+            </Button>
             <Button
               asChild
               variant="outline"
@@ -136,6 +149,8 @@ export function AboutMe() {
                 Download Resume
               </a>
             </Button>
+
+
           </motion.div>
         </motion.div>
 
