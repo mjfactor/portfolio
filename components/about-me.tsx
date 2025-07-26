@@ -1,7 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Download, MessageCircle } from "lucide-react"
@@ -98,125 +99,148 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
   ]
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 pt-30 relative bg-grid">
-      <div className="container mx-auto max-w-6xl relative z-10">
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent leading-tight pb-2">
-            Emjay Factor
-          </h1>
-          <h2 className="text-xl md:text-2xl font-semibold mb-6 text-foreground">
-            AI Applications • Software Applications • Full-Stack Development
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-            I'm passionate about building intelligent software solutions .
-          </p>
-
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="flex justify-center gap-4 mb-8"
-          >
-            <Button
-              onClick={onOpenChat}
-              variant="default"
-              size="lg"
-              className="bg-primary hover:bg-primary/90 transition-colors"
-            >
-              <MessageCircle size={18} />
-              Chat
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="hover:bg-primary/10 transition-colors"
-            >
-              <a
-                href="/Emjay_Factor_Resume.pdf"
-                download="Emjay_Factor_Resume.pdf"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                <Download size={18} />
-                Download Resume
-              </a>
-            </Button>
-
-
-          </motion.div>
-        </motion.div>
-
-        {/* Skills Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mb-16"
-        >
-          <h3 className="text-2xl font-semibold text-center mb-8 text-foreground">
-            Technologies & Tools that I Used
-          </h3>
-          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-            {skills.map((skill, index) => {
-              return (
-                <motion.div
-                  key={skill.name}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                >
-                  <Badge variant="secondary" className="text-sm py-2 px-4 hover:bg-primary/20 transition-colors flex items-center gap-2">
-                    <SimpleIcon icon={skill.icon} size={16} className="text-primary" />
-                    {skill.name}
-                  </Badge>
-                </motion.div>
-              )
-            })}
+    <>
+      {/* Navigation Bar */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/40">
+        <div className="container mx-auto flex justify-between items-center py-3 px-4">
+          <div className="flex items-center gap-2">
+            <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
+            <span className="font-bold text-lg text-foreground">Emjay Factor</span>
           </div>
-        </motion.div>
+          <nav className="flex gap-6">
+            <Link href="/" className="text-foreground hover:text-primary transition-colors">Home</Link>
+            <Link href="#projects" className="text-foreground hover:text-primary transition-colors">Projects</Link>
+          </nav>
+        </div>
+      </header>
 
-        {/* Focus Areas */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mb-16"
-        >
-          <h3 className="text-2xl font-semibold text-center mb-8 text-foreground">
-            What I Do
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {focusAreas.map((area, index) => (
-              <motion.div
-                key={area.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 + index * 0.2 }}
-              >
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-border/50 hover:border-primary/30">
-                  <CardHeader className="text-center pb-2">
-                    <div className="text-4xl mb-2">{area.icon}</div>
-                    <CardTitle className="text-xl">{area.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-center text-muted-foreground leading-relaxed">
-                      {area.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+      {/* Hero Section with Background */}
+      <section className="relative min-h-screen">
+        {/* Background Image */}
+        <div className="absolute inset-0 h-[550px] w-full overflow-hidden">
+          <div className="relative h-full w-full">
+            <Image
+              src="/images/space-background.jpg"
+              alt="Space background"
+              className="object-cover"
+              fill
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/60 to-background" />
           </div>
-        </motion.div>
-      </div>
-    </section>
+        </div>
+
+        {/* Main Content */}
+        <div className="relative mx-auto max-w-6xl px-4 pt-28 lg:pt-40 pb-12">
+          <div className="relative pb-8">
+            {/* Profile Section */}
+            <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left">
+              {/* Profile Logo */}
+              <div className="mb-6 h-40 w-40 overflow-hidden rounded-full border-4 border-background shadow-xl lg:mb-0 lg:mr-8 flex items-center justify-center bg-background">
+                <Image
+                  src="/images/logo.png"
+                  alt="Profile Logo"
+                  className="object-contain"
+                  width={120}
+                  height={120}
+                  priority
+                />
+              </div>
+
+              {/* Name, Title, Description, and Buttons Section */}
+              <div className="flex-1 lg:flex lg:justify-between lg:gap-8">
+                <div className="lg:flex-1">
+                  <h1 className="text-3xl font-bold sm:text-4xl text-foreground">
+                    Emjay Factor
+                  </h1>
+                  <p className="mt-2 text-xl text-muted-foreground">
+                    Aspiring AI/Software Engineer
+                  </p>
+
+                  {/* Badges */}
+                  <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <span className="text-primary">💻</span>
+                      Full-Stack Development
+                    </Badge>
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <span className="text-primary">🤖</span>
+                      AI Integration
+                    </Badge>
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <span className="text-primary">☁️</span>
+                      Cloud Computing
+                    </Badge>
+                  </div>
+
+                  {/* Bio Section */}
+                  <div className="mt-6 max-w-2xl mx-auto lg:mx-0">
+                    <p className="text-muted-foreground">
+                      I'm passionate about building intelligent software solutions.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-6 lg:mt-0 flex flex-col sm:flex-row lg:flex-col justify-center gap-3 lg:justify-start">
+                  <Button
+                    onClick={onOpenChat}
+                    variant="default"
+                    className="bg-primary hover:bg-primary/90 transition-colors"
+                  >
+                    <MessageCircle size={18} className="mr-2" />
+                    Chat
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="hover:bg-primary/10 transition-colors"
+                  >
+                    <a
+                      href="/Emjay_Factor_Resume.pdf"
+                      download="Emjay_Factor_Resume.pdf"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2"
+                    >
+                      <Download size={18} />
+                      Download Resume
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Skills Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-16"
+            >
+              <h3 className="text-2xl font-semibold text-center mb-8 text-foreground">
+                Technologies & Tools that I Used
+              </h3>
+              <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+                {skills.map((skill, index) => {
+                  return (
+                    <motion.div
+                      key={skill.name}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                    >
+                      <Badge variant="secondary" className="text-sm py-2 px-4 hover:bg-primary/20 transition-colors flex items-center gap-2">
+                        <SimpleIcon icon={skill.icon} size={16} className="text-primary" />
+                        {skill.name}
+                      </Badge>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }
