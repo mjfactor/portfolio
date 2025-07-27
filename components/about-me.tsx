@@ -79,30 +79,12 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
     { name: "MongoDB", icon: siMongodb },
   ]
 
-  const focusAreas = [
-    {
-      title: "AI Integration",
-      description: "Building intelligent applications with LLMs, embeddings, and AI-powered features",
-      icon: "🤖"
-    },
-    {
-      title: "Full-Stack Development",
-      description: "End-to-end web applications using modern frameworks and best practices",
-      icon: "💻"
-    },
-    {
-      title: "Cloud Computing",
-      description: "Experience with cloud services and deployment",
-      icon: "☁️"
-    }
-  ]
-
   return (
     <>
       {/* Hero Section with Background */}
       <section className="relative min-h-screen">
         {/* Background Image */}
-        <div className="absolute inset-0 h-[550px] w-full overflow-hidden">
+        <div className="absolute inset-0 h-[600px] w-full overflow-hidden">
           <div className="relative h-full w-full">
             <Image
               src="/images/space-background.jpg"
@@ -116,7 +98,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
         </div>
 
         {/* Main Content */}
-        <div className="relative mx-auto max-w-6xl px-4 pt-28 lg:pt-40 pb-12">
+        <div className="relative mx-auto max-w-6xl px-4 pt-40 lg:pt-70 pb-12">
           <div className="relative pb-8">
             {/* Profile Section */}
             <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left">
