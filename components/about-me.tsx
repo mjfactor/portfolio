@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Download, MessageCircle } from "lucide-react"
@@ -100,20 +99,6 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
 
   return (
     <>
-      {/* Navigation Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/40">
-        <div className="container mx-auto flex justify-between items-center py-3 px-4">
-          <div className="flex items-center gap-2">
-            <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
-            <span className="font-bold text-lg text-foreground">Emjay Factor</span>
-          </div>
-          <nav className="flex gap-6">
-            <Link href="/" className="text-foreground hover:text-primary transition-colors">Home</Link>
-            <Link href="#projects" className="text-foreground hover:text-primary transition-colors">Projects</Link>
-          </nav>
-        </div>
-      </header>
-
       {/* Hero Section with Background */}
       <section className="relative min-h-screen">
         {/* Background Image */}

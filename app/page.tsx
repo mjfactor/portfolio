@@ -5,12 +5,14 @@ import { ProjectsSection } from "@/components/projects-section"
 import { AboutMe } from "@/components/about-me"
 import { ChatBox } from "@/components/chat-box"
 import { Footer } from "@/components/footer"
+import { Navbar } from "@/components/navbar"
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-background relative">
+      <Navbar />
       <main className="relative z-10">
         <AboutMe onOpenChat={() => setIsChatOpen(true)} />
         <ProjectsSection />

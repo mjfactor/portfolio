@@ -10,7 +10,7 @@ import projects from "../projects.json"
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="py-20 px-4 pt-32">
+    <section id="projects" className="pb-20 px-4 ">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
