@@ -84,7 +84,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
       {/* Hero Section with Background */}
       <section className="relative min-h-screen">
         {/* Background Image */}
-        <div className="absolute inset-0 h-[600px] w-full overflow-hidden">
+        <div className="absolute inset-0 h-[500px] w-full overflow-hidden">
           <div className="relative h-full w-full">
             <Image
               src="/images/space-background.jpg"
@@ -93,7 +93,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
               fill
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/60 to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/65 via-background/90 to-background" />
           </div>
         </div>
 
