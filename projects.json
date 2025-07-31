@@ -68,5 +68,18 @@
         ],
         "image": "/images/ai-prompts.png",
         "githubUrl": "https://github.com/mjfactor/ai-prompts"
+    },
+    {
+        "title": "URL Shortener",
+        "description": "A shortener for URLs that allows you to create short links for your long URLs. Built with Spring Boot and MongoDB. Deployed on Azure Container Apps.",
+        "technologies": [
+            "Spring Boot",
+            "MongoDB",
+            "Java",
+            "Azure"
+        ],
+        "image": "/images/url-shortener.png",
+        "liveUrl": "https://url-shortener.proudmoss-71bb2d25.southeastasia.azurecontainerapps.io/api/health",
+        "githubUrl": "https://github.com/mjfactor/url-shortener"
     }
 ]
