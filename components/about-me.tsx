@@ -24,7 +24,9 @@ import {
   siCplusplus,
   siMongodb,
   siPhp,
-  siCoda
+  siCoda,
+  siSpringboot,
+  siSpring
 } from "simple-icons"
 
 interface AboutMeProps {
@@ -75,6 +77,8 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
     { name: "Github", icon: siGithub },
     { name: "Express.js", icon: siNodedotjs },
     { name: "Redis", icon: siRedis },
+    { name: "Spring Boot", icon: siSpringboot },
+    { name: "Spring AI", icon: siSpring },
     { name: "C++", icon: siCplusplus },
     { name: "MongoDB", icon: siMongodb },
   ]
