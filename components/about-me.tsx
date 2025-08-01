@@ -208,7 +208,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
                       key={skill.name}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
                     >
                       <Badge variant="secondary" className="text-sm py-2 px-4 hover:bg-primary/20 transition-colors flex items-center gap-2">
                         <SimpleIcon icon={skill.icon} size={16} className="text-primary" />
