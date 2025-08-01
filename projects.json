@@ -76,7 +76,8 @@
             "Spring Boot",
             "MongoDB",
             "Java",
-            "Azure"
+            "Azure Container Apps",
+            "Docker"
         ],
         "image": "/images/url-shortener.png",
         "liveUrl": "https://url-shortener.proudmoss-71bb2d25.southeastasia.azurecontainerapps.io/api/health",
