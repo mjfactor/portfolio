@@ -50,7 +50,7 @@ const formatToolName = (toolName: string): string => {
 };
 
 export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
-  const [shownCompletions, setShownCompletions] = useState<Set<string>>(new Set())
+
 
   const { messages, input, handleInputChange, handleSubmit, status, error, setMessages } = useChat({
     onError: (error) => {
@@ -89,7 +89,6 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
         content: "Hi, I'm Emjay's AI Bot assistant."
       }
     ])
-    setShownCompletions(new Set()) // Reset completion tracking
   }
 
 
@@ -206,25 +205,11 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
                                             </div>
                                           )}
                                           {toolInvocation.state === 'result' && (
-                                            (() => {
-                                              // For retrieval tools, only show completion once
-                                              if (toolInvocation.toolName === 'getInformation') {
-                                                const completionKey = `${message.id}-getInformation-completed`
-                                                if (shownCompletions.has(completionKey)) {
-                                                  return null // Don't show duplicate completion
-                                                }
-                                                // Mark as shown
-                                                setShownCompletions(prev => new Set([...prev, completionKey]))
-                                              }
-
-                                              return (
-                                                <div className="text-xs text-muted-foreground mb-1">
-                                                  <span className="inline-flex items-center gap-1">
-                                                    ✅ <span className="font-medium">{formatToolName(toolInvocation.toolName)}</span> completed
-                                                  </span>
-                                                </div>
-                                              )
-                                            })()
+                                            <div className="text-xs text-muted-foreground mb-1">
+                                              <span className="inline-flex items-center gap-1">
+                                                ✅ <span className="font-medium">{formatToolName(toolInvocation.toolName)}</span> completed
+                                              </span>
+                                            </div>
                                           )}
                                         </div>
                                       );
