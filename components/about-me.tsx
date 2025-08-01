@@ -82,7 +82,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
     { name: "PHP", icon: siPhp },
     { name: "Vercel", icon: siVercel },
     { name: "Google AI Studio", icon: siGooglegemini },
-    { name: "Vercel AI Sdk", icon: siVercel },
+    { name: "Vercel AI SDK", icon: siVercel },
     { name: "Microsoft Azure", icon: siAuchan },
     { name: "Github", icon: siGithub },
     { name: "Express.js", icon: siNodedotjs },
@@ -199,7 +199,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
               className="mt-16"
             >
               <h3 className="text-2xl font-semibold text-center mb-8 text-foreground">
-                Technologies & Tools that I Used
+                Technologies & Tools that I'm familiar with
               </h3>
               <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
                 {skills.map((skill, index) => {
