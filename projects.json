@@ -80,7 +80,7 @@
             "Docker"
         ],
         "image": "/images/url-shortener.png",
-        "liveUrl": "https://url-shortener.proudmoss-71bb2d25.southeastasia.azurecontainerapps.io/api/health",
+        "liveUrl": "https://url-shortener.proudmoss-71bb2d25.southeastasia.azurecontainerapps.io/",
         "githubUrl": "https://github.com/mjfactor/url-shortener"
     }
 ]
