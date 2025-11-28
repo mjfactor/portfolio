@@ -135,7 +135,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
                     Emjay Factor
                   </h1>
                   <p className="mt-2 text-xl text-muted-foreground">
-                    Aspiring AI/Software Engineer
+                    Software Engineer
                   </p>
 
                   {/* Badges */}
