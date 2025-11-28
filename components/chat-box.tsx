@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+
 import { motion, AnimatePresence } from "framer-motion"
 import { Send, MessageCircle, X, Trash2 } from "lucide-react"
 import { useChat } from "@ai-sdk/react"
