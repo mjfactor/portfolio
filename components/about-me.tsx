@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Download, MessageCircle } from "lucide-react"
+import { BriefcaseBusiness, Bot, Cloud, Download, MessageCircle } from "lucide-react"
 import {
   siTypescript,
   siNpm,
@@ -95,29 +95,18 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
 
   return (
     <>
-      {/* Hero Section with Background */}
-      <section className="relative min-h-screen">
-        {/* Background Image */}
-        <div className="absolute inset-0 h-[500px] w-full overflow-hidden">
-          <div className="relative h-full w-full">
-            <Image
-              src="/images/space-background.jpg"
-              alt="Space background"
-              className="object-cover"
-              fill
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/65 via-background/90 to-background" />
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="relative mx-auto max-w-6xl px-4 pt-40 lg:pt-70 pb-12">
+      <section id="home" className="relative overflow-hidden bg-background">
+        <div className="mx-auto max-w-6xl px-4 pb-20 pt-32 sm:pt-36 lg:pb-24 lg:pt-44">
           <div className="relative pb-8">
+            <div className="mb-8 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="h-px w-8 bg-primary" />
+              Software engineer · AI integration
+            </div>
+
             {/* Profile Section */}
             <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left">
               {/* Profile Logo */}
-              <div className="mb-6 h-40 w-40 overflow-hidden rounded-full border-4 border-background shadow-xl lg:mb-0 lg:mr-8 flex items-center justify-center bg-background">
+              <div className="mb-6 flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-background shadow-xl sm:h-40 sm:w-40 lg:mb-0 lg:mr-10">
                 <Image
                   src="/images/logo.png"
                   alt="Profile Logo"
@@ -131,25 +120,25 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
               {/* Name, Title, Description, and Buttons Section */}
               <div className="flex-1 lg:flex lg:justify-between lg:gap-8">
                 <div className="lg:flex-1">
-                  <h1 className="text-3xl font-bold sm:text-4xl text-foreground">
-                    Emjay Factor
+                  <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                    Software engineer <span className="text-primary">building with AI.</span>
                   </h1>
-                  <p className="mt-2 text-xl text-muted-foreground">
-                    Software Engineer at Accenture
+                  <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
+                    I&apos;m Emjay Factor. I build practical software and integrate AI into useful products.
                   </p>
 
                   {/* Badges */}
                   <div className="mt-4 flex flex-wrap justify-center gap-2 lg:justify-start">
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <span className="text-primary">💻</span>
+                    <Badge variant="secondary" className="flex items-center gap-2">
+                      <BriefcaseBusiness className="h-3.5 w-3.5 text-primary" />
                       Full-Stack Development
                     </Badge>
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <span className="text-primary">🤖</span>
+                    <Badge variant="secondary" className="flex items-center gap-2">
+                      <Bot className="h-3.5 w-3.5 text-primary" />
                       AI Integration
                     </Badge>
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <span className="text-primary">☁️</span>
+                    <Badge variant="secondary" className="flex items-center gap-2">
+                      <Cloud className="h-3.5 w-3.5 text-primary" />
                       Cloud Computing
                     </Badge>
                   </div>
@@ -157,7 +146,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
                   {/* Bio Section */}
                   <div className="mt-6 max-w-2xl mx-auto lg:mx-0">
                     <p className="text-muted-foreground">
-                      I'm passionate about building intelligent software solutions.
+                      I work across full-stack development and AI workflows, using tools like LangChain and n8n to turn ideas into useful, reliable experiences.
                     </p>
                   </div>
                 </div>
@@ -196,10 +185,10 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-16"
+              className="mt-20 border-t border-border/50 pt-10"
             >
               <h3 className="text-2xl font-semibold text-center mb-8 text-foreground">
-                Technologies & Tools that I'm familiar with
+                Tools I work with
               </h3>
               <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
                 {skills.map((skill, index) => {
@@ -210,7 +199,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.5 }}
                     >
-                      <Badge variant="secondary" className="text-sm py-2 px-4 hover:bg-primary/20 transition-colors flex items-center gap-2">
+                      <Badge variant="secondary" className="flex items-center gap-2 px-3 py-1.5 text-sm transition-colors hover:bg-primary/20">
                         <SimpleIcon icon={skill.icon} size={16} className="text-primary" />
                         {skill.name}
                       </Badge>

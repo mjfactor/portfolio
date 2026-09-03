@@ -10,18 +10,19 @@ import projects from "../projects.json"
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="pb-20 px-4 ">
+    <section id="projects" className="border-t border-border/40 px-4 pb-24 pt-20">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Here are some of my recent projects.
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-primary">Selected work</p>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">Projects</h2>
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+            A few experiments and products I&apos;ve built recently.
           </p>
         </motion.div>
 
@@ -32,7 +33,7 @@ export function ProjectsSection() {
           viewport={{ once: true }}
           className="mt-8"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
               <motion.div
                 key={index}
@@ -41,9 +42,9 @@ export function ProjectsSection() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="h-full"
               >
-                <Card className="h-full flex flex-col">
-                  <CardHeader className="pb-2">
-                    <div className="h-[180px] w-full overflow-hidden rounded-t-lg">
+                <Card className="h-full flex flex-col overflow-hidden border-border/60 bg-card/70 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <CardHeader className="p-0 pb-2">
+                    <div className="h-[200px] w-full overflow-hidden border-b border-border/50">
                       <Image
                         src={project.image}
                         alt={project.title}
@@ -52,10 +53,12 @@ export function ProjectsSection() {
                         className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
                       />
                     </div>
-                    <CardTitle className="text-xl mt-4">{project.title}</CardTitle>
-                    <CardDescription className="text-sm line-clamp-3">
-                      {project.description}
-                    </CardDescription>
+                    <div className="px-6 pt-5">
+                      <CardTitle className="text-xl">{project.title}</CardTitle>
+                      <CardDescription className="mt-2 text-sm line-clamp-3">
+                        {project.description}
+                      </CardDescription>
+                    </div>
                   </CardHeader>
                   <CardContent className="flex flex-col flex-grow">
                     <div className="mb-4 flex flex-wrap gap-2">
