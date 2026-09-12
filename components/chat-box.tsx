@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ReactMarkdown from "react-markdown"
+import type { Components } from "react-markdown"
 
 interface ChatBoxProps {
   isOpen: boolean
@@ -17,37 +18,28 @@ interface ChatBoxProps {
 }
 
 // Custom components for ReactMarkdown
-const markdownComponents = {
-  a: ({ href, children, ...props }: any) => (
+const markdownComponents: Components = {
+  a: ({ href, children }) => (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="text-primary hover:text-primary/80 underline underline-offset-2 transition-colors duration-200 font-medium"
-      {...props}
     >
       {children}
     </a>
   ),
-  p: ({ children }: any) => (
+  p: ({ children }) => (
     <p className="mb-2 last:mb-0">{children}</p>
   ),
-  strong: ({ children }: any) => (
+  strong: ({ children }) => (
     <strong className="font-semibold text-foreground">{children}</strong>
   ),
-  em: ({ children }: any) => (
+  em: ({ children }) => (
     <em className="italic text-muted-foreground">{children}</em>
   )
 }
 
-
-// Helper function to format tool names for display
-const formatToolName = (toolName: string): string => {
-  return toolName
-    .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-    .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
-    .trim();
-};
 
 export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
 
@@ -56,7 +48,6 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
     onError: (error) => {
       console.error("Chat error:", error)
     },
-    maxSteps: 3,
     initialMessages: [{
       id: "1",
       role: "system",
@@ -74,10 +65,7 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       if (input.trim() && status !== 'submitted' && status !== 'streaming') {
-        const form = e.currentTarget.closest('form')
-        if (form) {
-          handleSubmit(e as any)
-        }
+        e.currentTarget.closest('form')?.requestSubmit()
       }
     }
   }
@@ -139,7 +127,7 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
             >
               <Card className="h-[70vh] md:h-[80vh] max-h-[700px] flex flex-col">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                  <CardTitle className="text-lg">Let's Chat!</CardTitle>
+                  <CardTitle className="text-lg">Let&apos;s Chat!</CardTitle>
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
@@ -170,55 +158,19 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
                           className={`max-w-[85%] p-3 rounded-lg overflow-hidden ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
                             }`}
                         >
-                            {/* Render message parts if available, otherwise fall back to content */}
                             {message.parts && message.parts.length > 0 ? (
                               <div className="space-y-2">
                                 {message.parts.map((part, partIndex) => {
-                                  switch (part.type) {
-                                    case 'text':
-                                      return (
-                                        <div key={partIndex} className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
-                                          <ReactMarkdown components={markdownComponents}>{part.text}</ReactMarkdown>
-                                        </div>
-                                      );
-                                    case 'tool-invocation':
-                                      const { toolInvocation } = part;
-                                      return (
-                                        <div key={partIndex} className="space-y-2">                                          {toolInvocation.state === 'partial-call' && (
-                                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                            <div className="flex space-x-1">
-                                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
-                                            </div>
-                                            <span>Preparing {formatToolName(toolInvocation.toolName)}...</span>
-                                          </div>
-                                        )}
-                                          {toolInvocation.state === 'call' && (
-                                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                              <div className="flex space-x-1">
-                                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce"></div>
-                                              </div>
-                                              <span>🔧 Calling {formatToolName(toolInvocation.toolName)}...</span>
-                                            </div>
-                                          )}
-                                          {toolInvocation.state === 'result' && (
-                                            <div className="text-xs text-muted-foreground mb-1">
-                                              <span className="inline-flex items-center gap-1">
-                                                ✅ <span className="font-medium">{formatToolName(toolInvocation.toolName)}</span> completed
-                                              </span>
-                                            </div>
-                                          )}
-                                        </div>
-                                      );
-                                    default:
-                                      return null;
+                                  if (part.type === 'text') {
+                                    return (
+                                      <div key={partIndex} className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
+                                        <ReactMarkdown components={markdownComponents}>{part.text}</ReactMarkdown>
+                                      </div>
+                                    );
                                   }
+                                  return null;
                                 })}
                               </div>) : (
-                              // Backward compatibility: show content if no parts
                               <div className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:m-0 prose-p:leading-relaxed">
                                 <ReactMarkdown components={markdownComponents}>{message.content}</ReactMarkdown>
                               </div>
@@ -240,20 +192,7 @@ export function ChatBox({ isOpen, setIsOpen }: ChatBoxProps) {
                               <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                               <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
                             </div>                            <span className="text-sm text-muted-foreground">
-                              {(() => {
-                                // Check if the last message has any tool invocations in progress
-                                const lastMessage = messages[messages.length - 1];
-                                if (lastMessage?.parts) {
-                                  const toolInvocations = lastMessage.parts.filter(part => part.type === 'tool-invocation');
-                                  const activeTool = toolInvocations.find(part =>
-                                    part.toolInvocation?.state === 'call' || part.toolInvocation?.state === 'partial-call'
-                                  );
-                                  if (activeTool) {
-                                    return `Using ${formatToolName(activeTool.toolInvocation.toolName)}...`;
-                                  }
-                                }
-                                return "AI is thinking...";
-                              })()}
+                              AI is thinking...
                             </span>
                           </div>
                         </div>

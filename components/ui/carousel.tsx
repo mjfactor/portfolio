@@ -95,6 +95,7 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync embla's initial selected slide on mount (canonical shadcn pattern)
     onSelect(api)
     api.on("reInit", onSelect)
     api.on("select", onSelect)

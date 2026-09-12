@@ -1,8 +1,6 @@
 
-import { streamText, tool } from 'ai';
+import { convertToCoreMessages, streamText, type UIMessage } from 'ai';
 import { google } from '@ai-sdk/google';
-import { z } from 'zod';
-import { retrieveContext } from '@/lib/rag/retrieval';
 import { NextResponse } from 'next/server';
 import projectsData from '@/projects.json';
 
@@ -10,7 +8,7 @@ export const maxDuration = 30;
 export const runtime = 'edge';
 
 interface ChatRequestBody {
-    messages: any[];
+    messages: UIMessage[];
 }
 
 export async function POST(req: Request) {
@@ -48,16 +46,7 @@ export async function POST(req: Request) {
         - Keep responses concise but informative
         - Dont repeat your words
         `,
-        messages,
-        tools: {
-            getInformation: tool({
-                description: `Retrieve detailed information from Emjay's portfolio and resume to answer questions about his background, skills, projects, experience, and professional journey.`,
-                parameters: z.object({
-                    question: z.string().describe('the users question'),
-                }),
-                execute: async ({ question }) => retrieveContext(question),
-            }),
-        },
+        messages: convertToCoreMessages(messages),
     });
 
     return result.toDataStreamResponse();
@@ -68,7 +57,7 @@ export async function GET() {
         return NextResponse.json({
             message: 'This is an AI assistant for emjay\'s portfolio website. Use POST to interact with it.',
         }, { status: 200 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 

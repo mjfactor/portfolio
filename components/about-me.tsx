@@ -31,7 +31,8 @@ import {
   siPhp,
   siCoda,
   siSpringboot,
-  siSpring
+  siSpring,
+  type SimpleIcon as SimpleIconData
 } from "simple-icons"
 
 interface AboutMeProps {
@@ -40,7 +41,7 @@ interface AboutMeProps {
 
 // Simple Icons React component wrapper
 interface SimpleIconProps {
-  icon: any
+  icon: SimpleIconData
   size?: number
   className?: string
 }
@@ -191,7 +192,7 @@ export function AboutMe({ onOpenChat }: AboutMeProps) {
                 Tools I work with
               </h3>
               <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-                {skills.map((skill, index) => {
+                {skills.map((skill) => {
                   return (
                     <motion.div
                       key={skill.name}

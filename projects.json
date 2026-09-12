@@ -45,14 +45,13 @@
     },
     {
         "title": "Portfolio",
-        "description": "My Portfolio to showcase my projects and skills. It has a RAG (Retrieval Augmented Generation) feature that allows you to ask questions about my projects and get AI-generated responses.",
+        "description": "My Portfolio to showcase my projects and skills. It has an AI chat assistant that answers questions about my projects from the system prompt and project data.",
         "technologies": [
             "Next.js",
             "React",
             "TypeScript",
             "Prisma",
-            "AI SDK",
-            "Azure AI Search"
+            "AI SDK"
         ],
         "image": "/images/portfolio.png",
         "liveUrl": "https://portfolio-emjay-factor.vercel.app/",

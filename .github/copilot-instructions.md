@@ -3,24 +3,22 @@
 This concise guide helps an AI coding agent become productive in this repository quickly. Focus on the files and commands listed, and follow the project-specific conventions.
 
 Snapshot
-- Framework: Next.js 15 (App Router) with TypeScript (strict).
+- Framework: Next.js 16 (App Router) with TypeScript (strict).
 - UI: shadcn UI + Radix + Tailwind CSS v4. Animations: Framer Motion.
-- AI: Google AI SDK (`@ai-sdk/*`) for chat + embeddings; RAG stored in Azure AI Search.
+- AI: Google AI SDK (`@ai-sdk/*`) for chat (system prompt + `projects.json`, no retrieval).
 - DB: Neon Postgres via Drizzle ORM. Package manager: `pnpm`.
 
 Quick commands
-- `pnpm dev --turbopack` — local development (Turbopack)
+- `pnpm dev` — local development (Turbopack is default)
 - `pnpm build` — production build
 - `pnpm start` — production server
 - `pnpm lint` — run ESLint
-- `pnpm run rag:scrape` — re-index website and resume into Azure AI Search
 - `pnpm run db:generate|db:migrate|db:push|db:pull` — Drizzle DB workflows
 
 Big picture & data flow
 - UI and content: pages and components under `app/` and `components/` (static `projects.json` feeds system prompts).
-- Chat API: `app/api/chat/route.ts` implements the chat endpoint and invokes retrieval/tool-calls.
-- RAG pipeline: `lib/rag/` contains scraper, chunking, embedding and index management (`runRecreateIndex.ts`, `scraper.ts`, `retrieval.ts`).
-- Flow: web UI -> chat API -> retrieval layer -> Google embeddings + Azure AI Search -> chat model responses.
+- Chat API: `app/api/chat/route.ts` implements the chat endpoint with a system prompt built from `projects.json` (no tools, no retrieval).
+- Flow: web UI -> chat API -> Google Gemini model responses.
 
 Conventions (follow strictly)
 - Prefer Server Components; only use `"use client"` at the top of small interactive components (e.g., `components/chat-box.tsx`).
@@ -30,20 +28,18 @@ Conventions (follow strictly)
 - Use `@/` path aliases configured in `tsconfig.json` for imports.
 
 Integration & environment notes
-- Required env vars for local testing and RAG: `GOOGLE_AI_API_KEY`, `AZURE_AISEARCH_ENDPOINT`, `AZURE_AISEARCH_KEY`.
-- RAG index names referenced in code: `emjay-portfolio` and `emjay-resume`.
-- Resume PDF path (used by scraper): `/Emjay_Factor_Resume.pdf` (check `lib/rag/scraper.ts`).
+- Required env vars for local chat: `GOOGLE_API_KEY` and `GOOGLE_GENERATIVE_AI_API_KEY`.
+- Resume PDF path (linked in chat system prompt): `/Emjay_Factor_Resume.pdf` in `public/`.
 
 Files to inspect before changing behavior
-- `app/api/chat/route.ts` — read first to understand chat/tool-calling.
-- `lib/rag/retrieval.ts` & `lib/rag/scraper.ts` — reindexing and search logic.
+- `app/api/chat/route.ts` — read first to understand the chat system prompt.
 - `components/chat-box.tsx` — client-side streaming UI and hooks.
 - `projects.json` — canonical project metadata used in prompts.
 - `components/ui/*` — shared UI components and visual patterns.
 
 Agent checklist when making changes
-1. Run unit/dev flow: `pnpm dev --turbopack` to verify UI/server changes.
-2. For RAG/index changes, set env vars and run: `pnpm run rag:scrape` to populate indexes.
+1. Run unit/dev flow: `pnpm dev` to verify UI/server changes.
+2. For chatbot content changes, update `projects.json` and the system prompt in `app/api/chat/route.ts`.
 3. For DB migrations, use the Drizzle commands above and verify locally.
 4. Respect theming tokens and `use client` boundaries.
 
@@ -53,14 +49,14 @@ If anything is unclear, ask for the desired behavior and point to the specific f
 # AI Coding Assistant Instructions for Portfolio Project
 
 ## Project Overview
-This is a Next.js 15 portfolio website with AI-powered chat assistant featuring RAG (Retrieval-Augmented Generation) capabilities. The site showcases projects, skills, and provides an interactive chat interface for visitors to learn about Emjay's work.
+This is a Next.js 16 portfolio website with AI-powered chat assistant. The site showcases projects, skills, and provides an interactive chat interface for visitors to learn about Emjay's work.
 
 ## Architecture & Tech Stack
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript (strict mode enabled)
 - **UI**: Shadcn UI + Radix UI primitives with Tailwind CSS v4
-- **AI**: Google AI SDK + Vercel AI for chat, Azure AI Search for vector retrieval
-- **Database**: Neon PostgreSQL (Drizzle ORM), Azure AI Search for embeddings
+- **AI**: Google AI SDK + Vercel AI for chat (system prompt only)
+- **Database**: Neon PostgreSQL (Drizzle ORM)
 - **Deployment**: Vercel (primary) + Google Cloud Run (Docker)
 - **Animations**: Framer Motion
 - **Package Manager**: pnpm
@@ -91,33 +87,23 @@ export function ComponentName({ prop }: ComponentProps) {
 
 ### AI Chat System
 - Chat uses `@ai-sdk/react` with Google Gemini 2.5 Flash
-- Tool calling enabled with `getInformation` tool for RAG retrieval
-- Messages support tool invocation states and markdown rendering
+- No tools, no retrieval — answers come from the system prompt + `projects.json`
+- Messages support markdown rendering
 - System prompt includes project data from `projects.json`
 
-### RAG Pipeline
-- Scrapes portfolio website and resume PDF using Playwright + PDF loader
-- Chunks documents (1000 chars, 200 overlap) and embeds with Google AI
-- Stores in separate Azure AI Search indexes: `emjay-portfolio` and `emjay-resume`
-- Retrieval combines both sources for comprehensive answers
+### Chat Content
+- Chatbot answers from the system prompt in `app/api/chat/route.ts` + `projects.json`
+- Update `projects.json` when project info changes; no reindex step
 
 ## Critical Workflows
 
 ### Development
 ```bash
-pnpm dev --turbopack  # Fast development with Turbopack
+pnpm dev  # Fast development with Turbopack (default)
 pnpm build           # Production build
 pnpm start           # Production server
 pnpm lint            # ESLint check
 ```
-
-### RAG Index Management
-```bash
-pnpm run rag:scrape  # Update vector indexes from live content
-```
-- Scrapes `https://portfolio-emjay-factor.vercel.app/` and resume PDF
-- Safely replaces existing Azure AI Search indexes
-- Run after content updates or before deployment
 
 ### Database
 ```bash
@@ -139,7 +125,6 @@ pnpm run db:pull      # Pull remote schema
 - Components in `/components/` (shared) or `/app/components/` (page-specific)
 - UI components in `/components/ui/` (Shadcn library)
 - Utilities in `/lib/`
-- RAG logic in `/lib/rag/`
 - Static data in root (e.g., `projects.json`)
 
 ### Path Aliases
@@ -157,15 +142,14 @@ pnpm run db:pull      # Pull remote schema
 - `viewport={{ once: true }}` for performance
 
 ### Data Management
-- Projects data in `projects.json` (static)
-- Resume content via PDF parsing in RAG pipeline
-- Environment variables for API keys (Google AI, Azure Search)
+- Projects data in `projects.json` (static, inlined into chat system prompt)
+- Resume linked as static PDF in `public/`
+- Environment variables for API keys (Google AI)
 
 ## Integration Points
 
 ### AI Services
-- **Google AI**: Chat responses and embeddings (`@ai-sdk/google`, `@google/generative-ai`)
-- **Azure AI Search**: Vector storage and hybrid search
+- **Google AI**: Chat responses (`@ai-sdk/google`)
 - **Vercel AI**: React hooks and streaming (`@ai-sdk/react`)
 
 ### Deployment
@@ -173,9 +157,8 @@ pnpm run db:pull      # Pull remote schema
 - **Docker**: Multi-stage build with `standalone` output
 - **Google Cloud Run**: Containerized deployment option
 
-### External APIs
-- Portfolio website scraping (self-hosted)
-- Resume PDF loading from `/Emjay_Factor_Resume.pdf`
+### External Links
+- Resume PDF served from `/Emjay_Factor_Resume.pdf`
 - GitHub profile data (referenced in system prompt)
 
 ## Common Patterns
@@ -183,14 +166,13 @@ pnpm run db:pull      # Pull remote schema
 ### Error Handling
 - Try/catch blocks in async operations
 - Console logging for debugging
-- Graceful fallbacks in RAG retrieval
+- Graceful error handling in chat API
 
 ### Environment Setup
 ```bash
 # Required environment variables
-GOOGLE_AI_API_KEY=...
-AZURE_AISEARCH_ENDPOINT=...
-AZURE_AISEARCH_KEY=...
+GOOGLE_API_KEY=...
+GOOGLE_GENERATIVE_AI_API_KEY=...
 ```
 
 ### Build Optimization
@@ -199,9 +181,7 @@ AZURE_AISEARCH_KEY=...
 - Tree-shaking and code splitting handled by Next.js
 
 ## Key Files to Reference
-- `app/api/chat/route.ts` - Chat API with tool calling
-- `lib/rag/retrieval.ts` - Vector search logic
-- `lib/rag/scraper.ts` - Content indexing pipeline
+- `app/api/chat/route.ts` - Chat API (system prompt + `projects.json`)
 - `components/chat-box.tsx` - Chat UI component
 - `projects.json` - Project data structure
 - `components.json` - Shadcn UI configuration</content>
