@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Mail, Phone, Github, Linkedin } from "lucide-react"
 
@@ -125,6 +126,10 @@ export function Footer() {
                             <span className="text-primary">Next.js</span> and{" "}
                             <span className="text-primary">TypeScript</span>.
                         </p>
+                        <div className="mt-3 flex justify-center gap-4 text-sm text-muted-foreground">
+                            <Link href="/terms" className="hover:text-foreground">Terms</Link>
+                            <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+                        </div>
                     </motion.div>
                 </div>
             </div>
